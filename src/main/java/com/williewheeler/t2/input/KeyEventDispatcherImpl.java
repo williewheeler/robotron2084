@@ -1,4 +1,4 @@
-package com.williewheeler.t2;
+package com.williewheeler.t2.input;
 
 import com.williewheeler.t2.model.GameState;
 import com.williewheeler.t2.model.Player;

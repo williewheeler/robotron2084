@@ -11,6 +11,8 @@ import static com.williewheeler.t2.T2Config.*;
 public class Player {
 	private static final Logger log = LoggerFactory.getLogger(Player.class);
 
+	private GameState gameState;
+
 	private int score = 0;
 
 	private int x = PLAYER_START_X;
@@ -25,6 +27,12 @@ public class Player {
 	private boolean fireDownIntent;
 	private boolean fireLeftIntent;
 	private boolean fireRightIntent;
+
+	private int rechargeCounter = -1;
+
+	public Player(GameState gameState) {
+		this.gameState = gameState;
+	}
 
 	public int getScore() {
 		return score;
@@ -76,8 +84,8 @@ public class Player {
 
 	public void update() {
 //		log.trace("Updating game state");
-		incrementScore(15);
 		updatePlayer();
+		checkFireMissile();
 	}
 
 	private void updatePlayer() {
@@ -113,5 +121,36 @@ public class Player {
 		if (y > MAX_Y) {
 			y = MAX_Y;
 		}
+	}
+
+	private void checkFireMissile() {
+		if (rechargeCounter == -1) {
+			rechargeCounter = PLAYER_RECHARGE_PERIOD;
+		}
+
+		if (rechargeCounter == 0) {
+			int deltaX = 0;
+			int deltaY = 0;
+
+			if (fireUpIntent) {
+				deltaY -= PLAYER_FIRE_DISTANCE;
+			}
+			if (fireDownIntent) {
+				deltaY += PLAYER_FIRE_DISTANCE;
+			}
+			if (fireLeftIntent) {
+				deltaX -= PLAYER_FIRE_DISTANCE;
+			}
+			if (fireRightIntent) {
+				deltaX += PLAYER_FIRE_DISTANCE;
+			}
+
+			if (deltaX != 0 || deltaY != 0) {
+				PlayerMissile missile = new PlayerMissile(x, y, deltaX, deltaY);
+				gameState.getPlayerMissiles().add(missile);
+			}
+		}
+
+		rechargeCounter--;
 	}
 }

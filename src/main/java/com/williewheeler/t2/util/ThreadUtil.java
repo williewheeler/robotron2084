@@ -1,4 +1,4 @@
-package com.williewheeler.t2;
+package com.williewheeler.t2.util;
 
 /**
  * Created by willie on 5/13/17.

@@ -2,22 +2,23 @@ package com.williewheeler.t2.model;
 
 import java.util.Random;
 
-import static com.williewheeler.t2.T2Config.ENEMY_MOVE_DISTANCE;
-import static com.williewheeler.t2.T2Config.ENEMY_MOVE_MAX_PERIOD;
+import static com.williewheeler.t2.T2Config.*;
 
 /**
  * Created by willie on 5/13/17.
  */
-public class Enemy {
+public class Grunt {
 	private static Random random = new Random();
 
 	private GameState gameState;
-	private int x = 100;
-	private int y = 100;
+	private int x;
+	private int y;
 	private int moveIn = -1;
 
-	public Enemy(GameState gameState) {
+	public Grunt(GameState gameState) {
 		this.gameState = gameState;
+		this.x = random.nextInt(WINDOW_WIDTH);
+		this.y = random.nextInt(WINDOW_HEIGHT);
 	}
 
 	public int getX() {
@@ -30,7 +31,7 @@ public class Enemy {
 
 	public void update() {
 		if (moveIn == -1) {
-			this.moveIn = random.nextInt(ENEMY_MOVE_MAX_PERIOD);
+			this.moveIn = random.nextInt(GRUNT_MOVE_MAX_PERIOD);
 		}
 
 		if (moveIn == 0) {
@@ -43,16 +44,16 @@ public class Enemy {
 	private void moveTowardPlayer() {
 		Player player = gameState.getPlayer();
 		if (player.getX() > x) {
-			x += ENEMY_MOVE_DISTANCE;
+			x += GRUNT_MOVE_DISTANCE;
 		}
 		if (player.getX() < x) {
-			x -= ENEMY_MOVE_DISTANCE;
+			x -= GRUNT_MOVE_DISTANCE;
 		}
 		if (player.getY() > y) {
-			y += ENEMY_MOVE_DISTANCE;
+			y += GRUNT_MOVE_DISTANCE;
 		}
-		if (player.getY() < x) {
-			y -= ENEMY_MOVE_DISTANCE;
+		if (player.getY() < y) {
+			y -= GRUNT_MOVE_DISTANCE;
 		}
 	}
 }

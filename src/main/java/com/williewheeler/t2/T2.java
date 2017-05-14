@@ -1,6 +1,8 @@
 package com.williewheeler.t2;
 
+import com.williewheeler.t2.input.KeyEventDispatcherImpl;
 import com.williewheeler.t2.model.GameState;
+import com.williewheeler.t2.view.GamePane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

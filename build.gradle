@@ -1,0 +1,27 @@
+apply plugin: 'application'
+apply plugin: 'java'
+
+mainClassName = 'com.williewheeler.t2.T2'
+
+repositories {
+  jcenter()
+}
+
+ext {
+  junitVersion = '4.12'
+  slf4jVersion = '1.7.13'
+}
+
+dependencies {
+
+  // This dependency is exported to consumers, that is to say found on their compile classpath.
+  compile "org.slf4j:slf4j-api:${slf4jVersion}"
+  compile "org.slf4j:slf4j-log4j12:${slf4jVersion}"
+
+  // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+//    implementation 'com.google.guava:guava:21.0'
+
+  // Use JUnit test framework
+  testImplementation 'junit:junit:4.12'
+}
+

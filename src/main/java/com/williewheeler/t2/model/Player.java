@@ -13,8 +13,8 @@ public class Player {
 
 	private int score = 0;
 
-	private int playerX = PLAYER_START_X;
-	private int playerY = PLAYER_START_Y;
+	private int x = PLAYER_START_X;
+	private int y = PLAYER_START_Y;
 
 	private boolean moveUpIntent;
 	private boolean moveDownIntent;
@@ -34,12 +34,12 @@ public class Player {
 		this.score += delta;
 	}
 
-	public int getPlayerX() {
-		return playerX;
+	public int getX() {
+		return x;
 	}
 
-	public int getPlayerY() {
-		return playerY;
+	public int getY() {
+		return y;
 	}
 
 	public void setMoveUpIntent(boolean moveUpIntent) {
@@ -97,21 +97,21 @@ public class Player {
 			deltaX += PLAYER_MOVE_DISTANCE;
 		}
 
-		playerX += deltaX;
-		playerY += deltaY;
+		x += deltaX;
+		y += deltaY;
 
 		// Bounds check
-		if (playerX < MIN_X) {
-			playerX = MIN_X;
+		if (x < MIN_X) {
+			x = MIN_X;
 		}
-		if (playerX > MAX_X) {
-			playerX = MAX_X;
+		if (x > MAX_X) {
+			x = MAX_X;
 		}
-		if (playerY < MIN_Y) {
-			playerY = MIN_Y;
+		if (y < MIN_Y) {
+			y = MIN_Y;
 		}
-		if (playerY > MAX_Y) {
-			playerY = MAX_Y;
+		if (y > MAX_Y) {
+			y = MAX_Y;
 		}
 	}
 }

@@ -20,4 +20,7 @@ public class T2Config {
 
 	public static final int PLAYER_MOVE_DISTANCE = 8;
 	public static final int PLAYER_FIRE_DISTANCE = 5;
+
+	public static final int ENEMY_MOVE_DISTANCE = 10;
+	public static final int ENEMY_MOVE_MAX_PERIOD = 10;
 }

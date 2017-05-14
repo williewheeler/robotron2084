@@ -1,5 +1,6 @@
 package com.williewheeler.t2;
 
+import com.williewheeler.t2.model.Enemy;
 import com.williewheeler.t2.model.GameState;
 import com.williewheeler.t2.model.Player;
 
@@ -28,6 +29,7 @@ public class GamePane extends JComponent {
 		g.fillRect(0, 0, size.width, size.height);
 		paintHeader(g);
 		paintPlayer(g);
+		paintEnemy(g);
 	}
 
 	private void paintHeader(Graphics g) {
@@ -37,8 +39,15 @@ public class GamePane extends JComponent {
 	}
 
 	private void paintPlayer(Graphics g) {
+		Player player = getPlayer();
 		g.setColor(Color.RED);
-		g.fillOval(getPlayer().getPlayerX(), getPlayer().getPlayerY(), 15, 15);
+		g.fillOval(player.getX(), player.getY(), 15, 15);
+	}
+
+	private void paintEnemy(Graphics g) {
+		Enemy enemy = gameState.getEnemy();
+		g.setColor(Color.GREEN);
+		g.fillRect(enemy.getX(), enemy.getY(), 20, 20);
 	}
 
 	private Player getPlayer() {

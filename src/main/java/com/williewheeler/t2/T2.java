@@ -131,6 +131,7 @@ public class T2 extends JFrame {
 					audioFlags.setFlag(AudioFlags.FIRST_LEVEL);
 					break;
 				case GameEvent.NEW_LEVEL:
+					gamePane.displayTransition();
 					audioFlags.setFlag(AudioFlags.NEW_LEVEL);
 					break;
 				case GameEvent.EXPLODE:

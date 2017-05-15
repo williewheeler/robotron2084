@@ -28,7 +28,7 @@ public class GameState {
 
 	public GameState() {
 		this.player = new Player(this);
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 15; i++) {
 			grunts.add(new Grunt(this));
 		}
 	}

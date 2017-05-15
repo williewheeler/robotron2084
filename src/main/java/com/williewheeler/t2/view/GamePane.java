@@ -25,10 +25,15 @@ public class GamePane extends JComponent {
 	private GameState gameState;
 	private Font font;
 	private SpriteFactory spriteFactory = new SpriteFactory();
+	private Transitions transitions = new Transitions();
 
 	public GamePane(GameState gameState) {
 		this.gameState = gameState;
 		this.font = new Font("Robotron", Font.BOLD, 20);
+	}
+
+	public void displayTransition() {
+		transitions.displayTransition();
 	}
 
 	@Override
@@ -36,11 +41,20 @@ public class GamePane extends JComponent {
 		Dimension size = getSize();
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, size.width, size.height);
-		paintHeader(g);
-		paintArena(g);
-		paintPlayer(g);
-		paintEnemies(g);
-		paintPlayerMissiles(g);
+
+		if (transitions.isDisplayingTransition()) {
+			transitions.paintTransition(g);
+		} else {
+			paintHeader(g);
+			paintArena(g);
+			paintPlayer(g);
+			paintEnemies(g);
+			paintPlayerMissiles(g);
+		}
+	}
+
+	private Player getPlayer() {
+		return gameState.getPlayer();
 	}
 
 	private void paintHeader(Graphics g) {
@@ -94,9 +108,5 @@ public class GamePane extends JComponent {
 		for (PlayerMissile missile : missiles) {
 			g.fillRect(X_OFFSET + missile.getX() - 2, Y_OFFSET + missile.getY() - 2, 4, 4);
 		}
-	}
-
-	private Player getPlayer() {
-		return gameState.getPlayer();
 	}
 }

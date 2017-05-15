@@ -1,6 +1,10 @@
 package com.williewheeler.t2;
 
+import com.williewheeler.t2.audio.AudioFactory;
+import com.williewheeler.t2.audio.AudioFlags;
 import com.williewheeler.t2.input.KeyEventDispatcherImpl;
+import com.williewheeler.t2.model.GameEvent;
+import com.williewheeler.t2.model.GameListener;
 import com.williewheeler.t2.model.GameState;
 import com.williewheeler.t2.view.GamePane;
 import org.slf4j.Logger;
@@ -28,8 +32,11 @@ public class T2 extends JFrame {
 
 	private GameState gameState;
 	private GamePane gamePane;
+	private AudioFactory audioFactory;
+	private AudioFlags audioFlags;
 	private KeyEventDispatcher keyEventDispatcher;
 	private TickHandler tickHandler;
+	private GameHandler gameHandler;
 	private Timer timer;
 
 	public static void main(String[] args) {
@@ -41,9 +48,14 @@ public class T2 extends JFrame {
 		registerFont();
 		this.gameState = new GameState();
 		this.gamePane = new GamePane(gameState);
+		this.audioFactory = new AudioFactory();
+		this.audioFlags = new AudioFlags();
 		this.keyEventDispatcher = new KeyEventDispatcherImpl(gameState);
 		this.tickHandler = new TickHandler();
+		this.gameHandler = new GameHandler();
 		this.timer = new Timer(FRAME_PERIOD, tickHandler);
+
+		gameState.addGameListener(gameHandler);
 	}
 
 	public void start() {
@@ -56,6 +68,7 @@ public class T2 extends JFrame {
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
 		timer.start();
+		gameState.fireGameEvent(GameEvent.FIRST_LEVEL);
 	}
 
 	private void registerFont() {
@@ -68,6 +81,26 @@ public class T2 extends JFrame {
 		}
 	}
 
+	private void playAudio() {
+		if (audioFlags.isFlagSet(AudioFlags.FIRST_LEVEL)) {
+			audioFactory.playSoundEffect("firstlevel");
+		}
+		if (audioFlags.isFlagSet(AudioFlags.NEW_LEVEL)) {
+			audioFactory.playSoundEffect("newlevel");
+		}
+		if (audioFlags.isFlagSet(AudioFlags.EXPLODE)) {
+			audioFactory.playSoundEffect("explode");
+		}
+		if (audioFlags.isFlagSet(AudioFlags.WALK)) {
+			audioFactory.playSoundEffect("walk");
+		}
+		if (audioFlags.isFlagSet(AudioFlags.SHOT)) {
+			audioFactory.playSoundEffect("shot");
+		}
+
+		audioFlags.clearFlags();
+	}
+
 	private class TickHandler implements ActionListener {
 
 		@Override
@@ -78,6 +111,35 @@ public class T2 extends JFrame {
 			// TODO For tighter control, consider using active rendering here.
 			// See Killer Game Programming In Java, p. 21.
 			gamePane.repaint();
+			playAudio();
+		}
+	}
+
+	private class GameHandler implements GameListener {
+
+		@Override
+		public void handleEvent(GameEvent event) {
+			// TODO Consider implementing this in a way that doesn't require manually mapping events to flags.
+			// For example we could use the event IDs to indicate the number of left shifts in the flag. But I don't
+			// want to use IDs for that. [WLW]
+			int type = event.getType();
+			switch (type) {
+				case GameEvent.FIRST_LEVEL:
+					audioFlags.setFlag(AudioFlags.FIRST_LEVEL);
+					break;
+				case GameEvent.NEW_LEVEL:
+					audioFlags.setFlag(AudioFlags.NEW_LEVEL);
+					break;
+				case GameEvent.EXPLODE:
+					audioFlags.setFlag(AudioFlags.EXPLODE);
+					break;
+				case GameEvent.WALK:
+					audioFlags.setFlag(AudioFlags.WALK);
+					break;
+				case GameEvent.SHOT:
+					audioFlags.setFlag(AudioFlags.SHOT);
+					break;
+			}
 		}
 	}
 }

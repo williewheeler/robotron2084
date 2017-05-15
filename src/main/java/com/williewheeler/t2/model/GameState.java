@@ -1,10 +1,10 @@
 package com.williewheeler.t2.model;
 
-import com.williewheeler.t2.audio.AudioFactory;
 import com.williewheeler.t2.util.MathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -23,16 +23,17 @@ public class GameState {
 	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 	private final List<Grunt> grunts = new LinkedList<>();
 
-	// FIXME This stuff belongs in T2, not here. Move it once we have events.
-	private AudioFactory audioFactory = new AudioFactory();
+	private List<GameListener> gameListeners = new ArrayList<>();
 
 	public GameState() {
 		this.player = new Player(this);
 		for (int i = 0; i < 15; i++) {
 			grunts.add(new Grunt(this));
 		}
-		
-		audioFactory.playSoundEffect("firstlevel");
+	}
+
+	public void addGameListener(GameListener listener) {
+		gameListeners.add(listener);
 	}
 
 	public Player getPlayer() {
@@ -52,6 +53,14 @@ public class GameState {
 		updateGrunts();
 		updatePlayerMissiles();
 		checkPlayerMissileCollisions();
+	}
+
+	public void fireGameEvent(int type) {
+		// TODO Consider caching events instead of creating a new one each time.
+		GameEvent event = new GameEvent(this, type);
+		for (GameListener listener : gameListeners) {
+			listener.handleEvent(event);
+		}
 	}
 
 	private void updateGrunts() {
@@ -91,10 +100,10 @@ public class GameState {
 					playerMissileIt.remove();
 					gruntIt.remove();
 					player.incrementScore(GRUNT_SCORE_VALUE);
-					audioFactory.playSoundEffect("explode");
+					fireGameEvent(GameEvent.EXPLODE);
 
 					if (grunts.isEmpty()) {
-						audioFactory.playSoundEffect("newlevel");
+						fireGameEvent(GameEvent.NEW_LEVEL);
 					}
 
 					continue processMissiles;

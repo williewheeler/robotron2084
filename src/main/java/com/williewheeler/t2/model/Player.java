@@ -1,6 +1,5 @@
 package com.williewheeler.t2.model;
 
-import com.williewheeler.t2.audio.AudioFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +28,8 @@ public class Player {
 	private boolean fireLeftIntent;
 	private boolean fireRightIntent;
 
+	// Counters
 	private int rechargeCounter = -1;
-
-	// FIXME This stuff belongs in T2, not here. Move it once we have events.
-	private AudioFactory audioFactory = new AudioFactory();
 	private int walkCounter = -1;
 
 	public Player(GameState gameState) {
@@ -114,13 +111,11 @@ public class Player {
 		y += deltaY;
 
 		if (deltaX != 0 || deltaY != 0) {
-
-			// TODO Use events
 			if (walkCounter == -1) {
 				walkCounter = PLAYER_WALK_PERIOD;
 			}
 			if (walkCounter-- == 0) {
-				audioFactory.playSoundEffect("walk");
+				gameState.fireGameEvent(GameEvent.WALK);
 			}
 		}
 
@@ -164,7 +159,7 @@ public class Player {
 			if (deltaX != 0 || deltaY != 0) {
 				PlayerMissile missile = new PlayerMissile(x, y, deltaX, deltaY);
 				gameState.getPlayerMissiles().add(missile);
-				audioFactory.playSoundEffect("shot");
+				gameState.fireGameEvent(GameEvent.SHOT);
 			}
 		}
 

@@ -49,10 +49,13 @@ public class GameState {
 	}
 
 	public void update() {
-		player.update();
-		updateGrunts();
-		updatePlayerMissiles();
-		checkPlayerMissileCollisions();
+		if (player.isAlive()) {
+			player.update();
+			updateGrunts();
+			updatePlayerMissiles();
+			checkPlayerMissileCollisions();
+			checkPlayerCollision();
+		}
 	}
 
 	public void fireGameEvent(int type) {
@@ -96,7 +99,7 @@ public class GameState {
 			while (gruntIt.hasNext()) {
 				Grunt grunt = gruntIt.next();
 				int dist = MathUtil.distance(playerMissile.getX(), playerMissile.getY(), grunt.getX(), grunt.getY());
-				if (dist < 10) {
+				if (dist < COLLISION_DISTANCE) {
 					playerMissileIt.remove();
 					gruntIt.remove();
 					player.incrementScore(GRUNT_SCORE_VALUE);
@@ -108,6 +111,18 @@ public class GameState {
 
 					continue processMissiles;
 				}
+			}
+		}
+	}
+
+	private void checkPlayerCollision() {
+		ListIterator<Grunt> gruntIt = grunts.listIterator();
+		while (gruntIt.hasNext()) {
+			Grunt grunt = gruntIt.next();
+			int dist = MathUtil.distance(player.getX(), player.getY(), grunt.getX(), grunt.getY());
+			if (dist < COLLISION_DISTANCE) {
+				player.setAlive(false);
+				fireGameEvent(GameEvent.PLAYER_DEAD);
 			}
 		}
 	}

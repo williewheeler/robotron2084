@@ -19,6 +19,8 @@ public class Grunt {
 		this.gameState = gameState;
 		this.x = random.nextInt(WINDOW_WIDTH);
 		this.y = random.nextInt(WINDOW_HEIGHT);
+
+		// TODO Push the grunt away from the center so it doesn't automatically kill the player on startup. [WLW]
 	}
 
 	public int getX() {

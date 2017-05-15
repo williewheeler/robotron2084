@@ -11,6 +11,7 @@ public class GameEvent extends EventObject {
 	public static final int EXPLODE = 2;
 	public static final int WALK = 3;
 	public static final int SHOT = 4;
+	public static final int PLAYER_DEAD = 5;
 
 	private int type;
 

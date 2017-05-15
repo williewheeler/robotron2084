@@ -28,4 +28,6 @@ public class T2Config {
 
 	// https://strategywiki.org/wiki/Robotron:_2084/How_to_play
 	public static final int GRUNT_SCORE_VALUE = 100;
+
+	public static final int COLLISION_DISTANCE = 10;
 }

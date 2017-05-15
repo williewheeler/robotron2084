@@ -25,12 +25,12 @@ public class SpriteFactory {
 
 		this.player = new BufferedImage[3];
 		for (int i = 0; i < 3; i++) {
-			player[i] = sheet.getSubimage(i * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+			player[i] = sheet.getSubimage(i * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
 		}
 
 		this.grunt = new BufferedImage[3];
 		for (int i = 0; i < 3; i++) {
-			grunt[i] = sheet.getSubimage(i * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+			grunt[i] = sheet.getSubimage(i * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
 		}
 	}
 

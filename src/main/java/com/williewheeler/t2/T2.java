@@ -97,6 +97,9 @@ public class T2 extends JFrame {
 		if (audioFlags.isFlagSet(AudioFlags.SHOT)) {
 			audioFactory.playSoundEffect("shot");
 		}
+		if (audioFlags.isFlagSet(AudioFlags.PLAYER_DEAD)) {
+			audioFactory.playSoundEffect("playerdead");
+		}
 
 		audioFlags.clearFlags();
 	}
@@ -138,6 +141,9 @@ public class T2 extends JFrame {
 					break;
 				case GameEvent.SHOT:
 					audioFlags.setFlag(AudioFlags.SHOT);
+					break;
+				case GameEvent.PLAYER_DEAD:
+					audioFlags.setFlag(AudioFlags.PLAYER_DEAD);
 					break;
 			}
 		}

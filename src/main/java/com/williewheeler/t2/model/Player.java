@@ -18,6 +18,8 @@ public class Player {
 	private int x = PLAYER_START_X;
 	private int y = PLAYER_START_Y;
 
+	private boolean alive = true;
+
 	private boolean moveUpIntent;
 	private boolean moveDownIntent;
 	private boolean moveLeftIntent;
@@ -50,6 +52,14 @@ public class Player {
 
 	public int getY() {
 		return y;
+	}
+
+	public boolean isAlive() {
+		return alive;
+	}
+
+	public void setAlive(boolean alive) {
+		this.alive = alive;
 	}
 
 	public void setMoveUpIntent(boolean moveUpIntent) {

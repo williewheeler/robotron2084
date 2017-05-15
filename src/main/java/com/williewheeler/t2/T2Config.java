@@ -19,8 +19,9 @@ public class T2Config {
 	public static final int PLAYER_START_Y = WINDOW_HEIGHT / 2;
 
 	public static final int PLAYER_MOVE_DISTANCE = 8;
-	public static final int PLAYER_FIRE_DISTANCE = 5;
+	public static final int PLAYER_FIRE_DISTANCE = 10;
 	public static final int PLAYER_RECHARGE_PERIOD = 4;
+	public static final int PLAYER_WALK_PERIOD = 4;
 
 	public static final int GRUNT_MOVE_DISTANCE = 8;
 	public static final int GRUNT_MOVE_MAX_PERIOD = 10;

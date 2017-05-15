@@ -1,5 +1,6 @@
 package com.williewheeler.t2.model;
 
+import com.williewheeler.t2.audio.AudioFactory;
 import com.williewheeler.t2.util.MathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +23,16 @@ public class GameState {
 	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 	private final List<Grunt> grunts = new LinkedList<>();
 
+	// FIXME This stuff belongs in T2, not here. Move it once we have events.
+	private AudioFactory audioFactory = new AudioFactory();
+
 	public GameState() {
 		this.player = new Player(this);
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 15; i++) {
 			grunts.add(new Grunt(this));
 		}
+		
+		audioFactory.playSoundEffect("firstlevel");
 	}
 
 	public Player getPlayer() {
@@ -85,6 +91,12 @@ public class GameState {
 					playerMissileIt.remove();
 					gruntIt.remove();
 					player.incrementScore(GRUNT_SCORE_VALUE);
+					audioFactory.playSoundEffect("explode");
+
+					if (grunts.isEmpty()) {
+						audioFactory.playSoundEffect("newlevel");
+					}
+
 					continue processMissiles;
 				}
 			}

@@ -1,0 +1,19 @@
+https://strategywiki.org/wiki/Robotron:_2084/How_to_play
+
+Grunt                  100 points
+Brain                  500 points
+Cruise Missile          25 points
+Prog                   100 points
+Sphereoid             1000 points
+Enforcer               150 points
+Enforcer Spark          25 points
+Quark                 1000 points
+Tank                   200 points
+Tank Shell              50 points
+1st family member     1000 points
+2nd family member     2000 points
+3rd family member     3000 points
+4th family member     4000 points
+5th+ family member    5000 points
+
+(Point values for family members reset at the start of a new wave and after a life is lost.)

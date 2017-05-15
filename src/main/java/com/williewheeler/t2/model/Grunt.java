@@ -1,5 +1,7 @@
 package com.williewheeler.t2.model;
 
+import com.williewheeler.t2.util.MathUtil;
+
 import java.util.Random;
 
 import static com.williewheeler.t2.T2Config.*;
@@ -17,8 +19,16 @@ public class Grunt {
 
 	public Grunt(GameState gameState) {
 		this.gameState = gameState;
-		this.x = random.nextInt(WINDOW_WIDTH);
-		this.y = random.nextInt(WINDOW_HEIGHT);
+		Player player = gameState.getPlayer();
+
+		boolean tooClose = true;
+		while (tooClose) {
+			this.x = random.nextInt(ARENA_WIDTH);
+			this.y = random.nextInt(ARENA_HEIGHT);
+			if (MathUtil.distance(x, y, player.getX(), player.getY()) > 200) {
+				tooClose = false;
+			}
+		}
 
 		// TODO Push the grunt away from the center so it doesn't automatically kill the player on startup. [WLW]
 	}

@@ -7,19 +7,17 @@ public class T2Config {
 	public static final int FRAMES_PER_SECOND = 30;
 	public static final int FRAME_PERIOD = 1000 / FRAMES_PER_SECOND;
 
-	public static final int WINDOW_WIDTH = 1200;
-	public static final int WINDOW_HEIGHT = 800;
+	public static final int WINDOW_WIDTH = 800;
+	public static final int WINDOW_HEIGHT = 600;
+	public static final int HEADER_HEIGHT = 32;
+	public static final int ARENA_WIDTH = WINDOW_WIDTH - 60;
+	public static final int ARENA_HEIGHT = WINDOW_HEIGHT - (HEADER_HEIGHT + 70);
 
-	public static final int MIN_X = 10;
-	public static final int MAX_X = WINDOW_WIDTH - 21;
-	public static final int MIN_Y = 10;
-	public static final int MAX_Y = WINDOW_HEIGHT - 41;
-
-	public static final int PLAYER_START_X = WINDOW_WIDTH / 2;
-	public static final int PLAYER_START_Y = WINDOW_HEIGHT / 2;
+	public static final int PLAYER_START_X = ARENA_WIDTH / 2;
+	public static final int PLAYER_START_Y = ARENA_HEIGHT / 2;
 
 	public static final int PLAYER_MOVE_DISTANCE = 8;
-	public static final int PLAYER_FIRE_DISTANCE = 10;
+	public static final int PLAYER_FIRE_DISTANCE = 20;
 	public static final int PLAYER_RECHARGE_PERIOD = 4;
 	public static final int PLAYER_WALK_PERIOD = 4;
 

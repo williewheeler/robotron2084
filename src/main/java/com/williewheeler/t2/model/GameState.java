@@ -1,5 +1,6 @@
 package com.williewheeler.t2.model;
 
+import com.williewheeler.t2.T2Config;
 import com.williewheeler.t2.util.MathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class GameState {
 
 	public GameState() {
 		this.player = new Player(this);
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < 50; i++) {
 			grunts.add(new Grunt(this));
 		}
 	}
@@ -78,7 +79,7 @@ public class GameState {
 
 			int x = playerMissile.getX();
 			int y = playerMissile.getY();
-			if (x < MIN_X || x > MAX_X || y < MIN_Y || y > MAX_Y) {
+			if (x < 0 || x > T2Config.ARENA_WIDTH || y < 0 || y > T2Config.ARENA_HEIGHT) {
 				playerMissileIt.remove();
 			}
 		}
@@ -120,7 +121,7 @@ public class GameState {
 		while (gruntIt.hasNext()) {
 			Grunt grunt = gruntIt.next();
 			int dist = MathUtil.distance(player.getX(), player.getY(), grunt.getX(), grunt.getY());
-			if (dist < COLLISION_DISTANCE) {
+			if (dist < 20) {
 				player.setAlive(false);
 				fireGameEvent(GameEvent.PLAYER_DEAD);
 			}

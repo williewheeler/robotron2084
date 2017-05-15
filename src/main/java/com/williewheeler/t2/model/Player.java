@@ -1,5 +1,6 @@
 package com.williewheeler.t2.model;
 
+import com.williewheeler.t2.T2Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,17 +131,17 @@ public class Player {
 		}
 
 		// Bounds check
-		if (x < MIN_X) {
-			x = MIN_X;
+		if (x < 0) {
+			x = 0;
 		}
-		if (x > MAX_X) {
-			x = MAX_X;
+		if (x > T2Config.ARENA_WIDTH) {
+			x = T2Config.ARENA_WIDTH;
 		}
-		if (y < MIN_Y) {
-			y = MIN_Y;
+		if (y < 0) {
+			y = 0;
 		}
-		if (y > MAX_Y) {
-			y = MAX_Y;
+		if (y > T2Config.ARENA_HEIGHT) {
+			y = T2Config.ARENA_HEIGHT;
 		}
 	}
 

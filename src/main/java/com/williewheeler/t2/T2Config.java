@@ -18,7 +18,7 @@ public class T2Config {
 
 	public static final int PLAYER_MOVE_DISTANCE = 8;
 	public static final int PLAYER_FIRE_DISTANCE = 20;
-	public static final int PLAYER_RECHARGE_PERIOD = 4;
+	public static final int PLAYER_RECHARGE_PERIOD = 3;
 	public static final int PLAYER_WALK_PERIOD = 4;
 
 	public static final int GRUNT_MOVE_DISTANCE = 8;

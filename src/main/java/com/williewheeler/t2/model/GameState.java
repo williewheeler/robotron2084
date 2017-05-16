@@ -38,11 +38,11 @@ public class GameState {
 
 		this.player = new Player(this);
 
-		for (int i = 0; i < 15; i++) {
+		// TODO Move these to Waves
+		for (int i = 0; i < 40; i++) {
 			grunts.add(new Grunt(this));
 		}
-
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 6; i++) {
 			hulks.add(new Hulk(this));
 		}
 	}

@@ -50,8 +50,8 @@ public class GamePane extends JComponent {
 		} else {
 			paintHeader(g);
 			paintArena(g);
-			paintPlayer(g);
 			paintEnemies(g);
+			paintPlayer(g);
 			paintPlayerMissiles(g);
 		}
 	}

@@ -22,7 +22,9 @@ public class Grunt {
 	private int bornCountdown = -1;
 	private int moveCountdown = -1;
 	private int deadCountdown = -1;
-	private int numMoves = 0;
+
+	// Hacky
+	private int numMoves = random.nextInt(4);
 
 	public Grunt(GameState gameState) {
 		this.gameState = gameState;

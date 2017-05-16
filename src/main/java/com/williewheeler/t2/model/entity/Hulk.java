@@ -17,7 +17,9 @@ public class Hulk {
 	private int x;
 	private int y;
 	private int moveCountdown = -1;
-	private int numMoves = 0;
+
+	// Hacky
+	private int numMoves = random.nextInt(4);
 
 	public Hulk(GameState gameState) {
 		this.gameState = gameState;

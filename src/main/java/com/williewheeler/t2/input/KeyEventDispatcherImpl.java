@@ -1,7 +1,7 @@
 package com.williewheeler.t2.input;
 
 import com.williewheeler.t2.model.GameState;
-import com.williewheeler.t2.model.Player;
+import com.williewheeler.t2.model.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

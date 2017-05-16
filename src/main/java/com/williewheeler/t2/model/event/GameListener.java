@@ -1,4 +1,4 @@
-package com.williewheeler.t2.model;
+package com.williewheeler.t2.model.event;
 
 import java.util.EventListener;
 

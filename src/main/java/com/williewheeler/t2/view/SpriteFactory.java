@@ -13,6 +13,7 @@ public class SpriteFactory {
 
 	private BufferedImage[] player;
 	private BufferedImage[] grunt;
+	private BufferedImage[] hulk;
 
 	public SpriteFactory() {
 		BufferedImage sheet;
@@ -28,10 +29,18 @@ public class SpriteFactory {
 			player[i] = sheet.getSubimage(i * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
 		}
 
-		this.grunt = new BufferedImage[3];
-		for (int i = 0; i < 3; i++) {
-			grunt[i] = sheet.getSubimage(i * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-		}
+		this.grunt = new BufferedImage[4];
+		grunt[0] = sheet.getSubimage(0 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		grunt[1] = sheet.getSubimage(1 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		grunt[2] = grunt[0];
+		grunt[3] = sheet.getSubimage(2 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+
+		this.hulk = new BufferedImage[4];
+		// FIXME The hulk is a little taller, so we are going to need to handle this more cleanly. [WLW]
+		hulk[0] = sheet.getSubimage(0 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE + 1);
+		hulk[1] = sheet.getSubimage(1 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE + 1);
+		hulk[2] = hulk[0];
+		hulk[3] = sheet.getSubimage(2 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE + 1);
 	}
 
 	public BufferedImage[] getPlayer() {
@@ -40,5 +49,9 @@ public class SpriteFactory {
 
 	public BufferedImage[] getGrunt() {
 		return grunt;
+	}
+
+	public BufferedImage[] getHulk() {
+		return hulk;
 	}
 }

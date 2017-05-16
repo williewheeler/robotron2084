@@ -1,5 +1,11 @@
 package com.williewheeler.t2.model;
 
+import com.williewheeler.t2.model.entity.EntityState;
+import com.williewheeler.t2.model.entity.Grunt;
+import com.williewheeler.t2.model.entity.Hulk;
+import com.williewheeler.t2.model.entity.Player;
+import com.williewheeler.t2.model.entity.PlayerMissile;
+import com.williewheeler.t2.model.event.GameEvent;
 import com.williewheeler.t2.util.MathUtil;
 
 import java.util.List;
@@ -56,9 +62,8 @@ public class CollisionDetector {
 
 	private void checkPlayerCollision() {
 		Player player = gameState.getPlayer();
-		List<Grunt> grunts = gameState.getGrunts();
-		List<PlayerMissile> playerMissiles = gameState.getPlayerMissiles();
 
+		List<Grunt> grunts = gameState.getGrunts();
 		ListIterator<Grunt> gruntIt = grunts.listIterator();
 		while (gruntIt.hasNext()) {
 			Grunt grunt = gruntIt.next();
@@ -66,10 +71,16 @@ public class CollisionDetector {
 				int dist = MathUtil.distance(player.getX(), player.getY(), grunt.getX(), grunt.getY());
 				if (dist < 20) {
 					player.setAlive(false);
-					gameState.fireGameEvent(GameEvent.PLAYER_DEAD);
 				}
 			}
 		}
-	}
 
+		List<Hulk> hulks = gameState.getHulks();
+		for (Hulk hulk : hulks) {
+			int dist = MathUtil.distance(player.getX(), player.getY(), hulk.getX(), hulk.getY());
+			if (dist < 20) {
+				player.setAlive(false);
+			}
+		}
+	}
 }

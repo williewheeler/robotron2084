@@ -1,6 +1,8 @@
-package com.williewheeler.t2.model;
+package com.williewheeler.t2.model.entity;
 
 import com.williewheeler.t2.T2Config;
+import com.williewheeler.t2.model.event.GameEvent;
+import com.williewheeler.t2.model.GameState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +63,9 @@ public class Player {
 
 	public void setAlive(boolean alive) {
 		this.alive = alive;
+		if (!alive) {
+			gameState.fireGameEvent(GameEvent.PLAYER_DEAD);
+		}
 	}
 
 	public void setMoveUpIntent(boolean moveUpIntent) {

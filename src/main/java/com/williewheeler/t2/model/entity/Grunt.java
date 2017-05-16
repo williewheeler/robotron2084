@@ -1,5 +1,7 @@
-package com.williewheeler.t2.model;
+package com.williewheeler.t2.model.entity;
 
+import com.williewheeler.t2.model.GameState;
+import com.williewheeler.t2.model.event.GameEvent;
 import com.williewheeler.t2.util.MathUtil;
 
 import java.util.Random;
@@ -20,23 +22,22 @@ public class Grunt {
 	private int bornCountdown = -1;
 	private int moveCountdown = -1;
 	private int deadCountdown = -1;
+	private int numMoves = 0;
 
 	public Grunt(GameState gameState) {
 		this.gameState = gameState;
 		setEntityState(EntityState.BORN);
 
+		// TODO Extract this since other enemies use it.
 		Player player = gameState.getPlayer();
-
 		boolean tooClose = true;
 		while (tooClose) {
 			this.x = random.nextInt(ARENA_WIDTH);
 			this.y = random.nextInt(ARENA_HEIGHT);
-			if (MathUtil.distance(x, y, player.getX(), player.getY()) > 200) {
+			if (MathUtil.distance(x, y, player.getX(), player.getY()) > PLAYER_CLEAR_RADIUS) {
 				tooClose = false;
 			}
 		}
-
-		// TODO Push the grunt away from the center so it doesn't automatically kill the player on startup. [WLW]
 	}
 
 	public EntityState getEntityState() {
@@ -76,6 +77,10 @@ public class Grunt {
 		return y;
 	}
 
+	public int getNumMoves() {
+		return numMoves;
+	}
+
 	public void update() {
 		switch (entityState) {
 			case BORN:
@@ -96,19 +101,21 @@ public class Grunt {
 	}
 
 	private void updateBorn() {
-		if (--bornCountdown == -1) {
+		if (--bornCountdown < 0) {
 			setEntityState(EntityState.ALIVE);
 		}
 	}
 
 	private void updateAlive() {
-		if (moveCountdown == -1) {
+		if (moveCountdown < 0) {
 			this.moveCountdown = random.nextInt(GRUNT_MOVE_MAX_PERIOD);
+		} else {
+			if (moveCountdown == 0) {
+				numMoves++;
+				moveTowardPlayer();
+			}
+			moveCountdown--;
 		}
-		if (moveCountdown == 0) {
-			moveTowardPlayer();
-		}
-		moveCountdown--;
 	}
 
 	private void moveTowardPlayer() {

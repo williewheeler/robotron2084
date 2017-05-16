@@ -1,7 +1,5 @@
 package com.williewheeler.t2.view;
 
-import com.williewheeler.t2.T2Config;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,6 +8,7 @@ import java.awt.Graphics;
  * Created by willie on 5/15/17.
  */
 public class Transitions {
+	private static final int TRANSITION_LENGTH = 50;
 
 	private static final Color[] TRANSITION_COLORS = new Color[] {
 			Color.RED,
@@ -22,7 +21,7 @@ public class Transitions {
 	private int transitionCounter = -1;
 
 	public void displayTransition() {
-		this.transitionCounter = T2Config.TRANSITION_LENGTH;
+		this.transitionCounter = TRANSITION_LENGTH;
 	}
 
 	public boolean isDisplayingTransition() {
@@ -34,7 +33,7 @@ public class Transitions {
 	public void paintTransition(GamePane gamePane, Graphics g) {
 		Dimension paneSize = gamePane.getSize();
 
-		double progress = 1.0 - ((double) transitionCounter / T2Config.TRANSITION_LENGTH);
+		double progress = 1.0 - ((double) transitionCounter / TRANSITION_LENGTH);
 
 		// Draw outer colored box
 		double outerProgress = Math.min(1.0, 2.0 * progress);

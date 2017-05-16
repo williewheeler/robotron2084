@@ -2,9 +2,10 @@ package com.williewheeler.t2.view;
 
 import com.williewheeler.t2.T2Config;
 import com.williewheeler.t2.model.GameState;
-import com.williewheeler.t2.model.Grunt;
-import com.williewheeler.t2.model.Player;
-import com.williewheeler.t2.model.PlayerMissile;
+import com.williewheeler.t2.model.entity.Grunt;
+import com.williewheeler.t2.model.entity.Hulk;
+import com.williewheeler.t2.model.entity.Player;
+import com.williewheeler.t2.model.entity.PlayerMissile;
 
 import javax.swing.JComponent;
 import java.awt.Color;
@@ -90,6 +91,11 @@ public class GamePane extends JComponent {
 	}
 
 	private void paintEnemies(Graphics g) {
+		paintGrunts(g);
+		paintHulks(g);
+	}
+
+	private void paintGrunts(Graphics g) {
 		List<Grunt> grunts = gameState.getGrunts();
 		for (Grunt grunt : grunts) {
 			switch (grunt.getEntityState()) {
@@ -129,7 +135,7 @@ public class GamePane extends JComponent {
 		int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
 		int x = X_OFFSET + grunt.getX() - spriteOffset;
 		int y = Y_OFFSET + grunt.getY() - spriteOffset;
-		int spriteIndex = (x + y) % sprites.length;
+		int spriteIndex = grunt.getNumMoves() % sprites.length;
 		g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
 	}
 
@@ -152,6 +158,18 @@ public class GamePane extends JComponent {
 
 		BufferedImage spaghettified = EntityEffects.spaghettify(sprite, height);
 		g.drawImage(spaghettified, dispX, dispY, SPRITE_DISPLAY_SIZE, height, null);
+	}
+
+	private void paintHulks(Graphics g) {
+		List<Hulk> hulks = gameState.getHulks();
+		for (Hulk hulk : hulks) {
+			BufferedImage[] sprites = spriteFactory.getHulk();
+			int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
+			int x = X_OFFSET + hulk.getX() - spriteOffset;
+			int y = Y_OFFSET + hulk.getY() - spriteOffset;
+			int spriteIndex = hulk.getNumMoves() % sprites.length;
+			g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
+		}
 	}
 
 	private void paintPlayerMissiles(Graphics g) {

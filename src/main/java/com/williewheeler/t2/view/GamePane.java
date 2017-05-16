@@ -14,8 +14,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import static com.williewheeler.t2.T2Config.MOB_BORN_COUNTDOWN;
-import static com.williewheeler.t2.T2Config.MOB_BORN_DISTANCE;
+import static com.williewheeler.t2.T2Config.*;
 
 /**
  * Created by willie on 5/12/17.
@@ -93,7 +92,7 @@ public class GamePane extends JComponent {
 	private void paintEnemies(Graphics g) {
 		List<Grunt> grunts = gameState.getGrunts();
 		for (Grunt grunt : grunts) {
-			switch (grunt.getMobState()) {
+			switch (grunt.getEntityState()) {
 				case BORN:
 					paintGrunt_born(grunt, g);
 					break;
@@ -113,17 +112,16 @@ public class GamePane extends JComponent {
 
 		int gruntX = grunt.getX();
 		int gruntY = grunt.getY();
-		int bornCountdown = grunt.getBornCountdown();
-		double multiplier = (double) bornCountdown / MOB_BORN_COUNTDOWN;
+		double multiplier = (double) grunt.getBornCountdown() / ENTITY_BORN_COUNTDOWN;
 
-		int loY = gruntY - (int) (MOB_BORN_DISTANCE * multiplier);
-		int hiY = gruntY + (int) (MOB_BORN_DISTANCE * multiplier);
+		int loY = gruntY - (int) (ENTITY_BORN_SPREAD * multiplier);
+		int hiY = gruntY + (int) (ENTITY_BORN_SPREAD * multiplier);
 		int dispX = X_OFFSET + gruntX - SPRITE_DISPLAY_SIZE / 2;
 		int dispY = Y_OFFSET + loY - SPRITE_DISPLAY_SIZE / 2;
 		int height = Math.max(SPRITE_DISPLAY_SIZE, hiY - loY);
-		BufferedImage spaghettified = Effects.spaghettify(sprite, height);
-		g.drawImage(spaghettified, dispX, dispY, SPRITE_DISPLAY_SIZE, height, null);
 
+		BufferedImage spaghettified = EntityEffects.spaghettify(sprite, height);
+		g.drawImage(spaghettified, dispX, dispY, SPRITE_DISPLAY_SIZE, height, null);
 	}
 
 	private void paintGrunt_alive(Grunt grunt, Graphics g) {
@@ -135,8 +133,25 @@ public class GamePane extends JComponent {
 		g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
 	}
 
+	// TODO
+	// 1. Randomize the spread
+	// 2. The spread direction should depend on the direction of the player missile
+	// 3. Crop the image so that it doesn't go outside the arena
 	private void paintGrunt_dead(Grunt grunt, Graphics g) {
+		BufferedImage sprite = spriteFactory.getGrunt()[0];
 
+		int gruntX = grunt.getX();
+		int gruntY = grunt.getY();
+		double multiplier = 1.0 - (double) grunt.getDeadCountdown() / ENTITY_DEAD_COUNTDOWN;
+
+		int loY = gruntY - (int) (ENTITY_DEAD_SPREAD * multiplier);
+		int hiY = gruntY + (int) (ENTITY_DEAD_SPREAD * multiplier);
+		int dispX = X_OFFSET + gruntX - SPRITE_DISPLAY_SIZE / 2;
+		int dispY = Y_OFFSET + loY - SPRITE_DISPLAY_SIZE / 2;
+		int height = Math.max(SPRITE_DISPLAY_SIZE, hiY - loY);
+
+		BufferedImage spaghettified = EntityEffects.spaghettify(sprite, height);
+		g.drawImage(spaghettified, dispX, dispY, SPRITE_DISPLAY_SIZE, height, null);
 	}
 
 	private void paintPlayerMissiles(Graphics g) {

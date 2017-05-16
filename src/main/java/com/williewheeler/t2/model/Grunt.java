@@ -13,16 +13,18 @@ public class Grunt {
 	private static Random random = new Random();
 
 	private GameState gameState;
-	private MobState mobState = MobState.BORN;
+	private EntityState entityState = EntityState.BORN;
 	private int x;
 	private int y;
 
-	private int bornCountdown = random.nextInt(MOB_BORN_COUNTDOWN) + 10;
+	private int bornCountdown = -1;
 	private int moveCountdown = -1;
 	private int deadCountdown = -1;
 
 	public Grunt(GameState gameState) {
 		this.gameState = gameState;
+		setEntityState(EntityState.BORN);
+
 		Player player = gameState.getPlayer();
 
 		boolean tooClose = true;
@@ -37,12 +39,33 @@ public class Grunt {
 		// TODO Push the grunt away from the center so it doesn't automatically kill the player on startup. [WLW]
 	}
 
-	public MobState getMobState() {
-		return mobState;
+	public EntityState getEntityState() {
+		return entityState;
+	}
+
+	public void setEntityState(EntityState entityState) {
+		this.entityState = entityState;
+
+		// Special handling for a couple cases
+		Player player = gameState.getPlayer();
+		switch (entityState) {
+			case BORN:
+				this.bornCountdown = ENTITY_BORN_COUNTDOWN;
+				break;
+			case DEAD:
+				this.deadCountdown = ENTITY_DEAD_COUNTDOWN;
+				player.incrementScore(GRUNT_SCORE_VALUE);
+				gameState.fireGameEvent(GameEvent.EXPLODE);
+				break;
+		}
 	}
 
 	public int getBornCountdown() {
 		return bornCountdown;
+	}
+
+	public int getDeadCountdown() {
+		return deadCountdown;
 	}
 
 	public int getX() {
@@ -54,7 +77,7 @@ public class Grunt {
 	}
 
 	public void update() {
-		switch (mobState) {
+		switch (entityState) {
 			case BORN:
 				updateBorn();
 				break;
@@ -68,13 +91,13 @@ public class Grunt {
 				// No-op. Update loop will reclaim buried grunts.
 				break;
 			default:
-				throw new IllegalStateException("Unknown mobState: " + mobState);
+				throw new IllegalStateException("Unknown entityState: " + entityState);
 		}
 	}
 
 	private void updateBorn() {
 		if (--bornCountdown == -1) {
-			mobState = MobState.ALIVE;
+			setEntityState(EntityState.ALIVE);
 		}
 	}
 
@@ -105,6 +128,9 @@ public class Grunt {
 	}
 
 	private void updateDead() {
-		// TODO
+		this.deadCountdown--;
+		if (deadCountdown < 0) {
+			setEntityState(EntityState.BURIED);
+		}
 	}
 }

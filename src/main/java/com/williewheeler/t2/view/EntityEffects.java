@@ -8,9 +8,8 @@ import java.awt.image.BufferedImage;
 /**
  * Created by willie on 5/15/17.
  */
-public class Effects {
+public class EntityEffects {
 
-	// TODO This isn't *quite* spahettified
 	public static BufferedImage spaghettify(BufferedImage source, int targetHeight) {
 		final int sourceWidth = source.getWidth();
 		final int sourceHeight = source.getHeight();

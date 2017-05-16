@@ -3,6 +3,7 @@ package com.williewheeler.t2.view;
 import com.williewheeler.t2.T2Config;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 
 /**
@@ -30,7 +31,9 @@ public class Transitions {
 
 	// FIXME This needs some work to make it more faithful to the original.
 	// Also move this to its own class.
-	public void paintTransition(Graphics g) {
+	public void paintTransition(GamePane gamePane, Graphics g) {
+		Dimension paneSize = gamePane.getSize();
+
 		double progress = 1.0 - ((double) transitionCounter / T2Config.TRANSITION_LENGTH);
 
 		// Draw outer colored box
@@ -38,10 +41,10 @@ public class Transitions {
 		double outerRegress = outerProgress;
 		int colorIndex = 0;
 		while (outerRegress > 0.0) {
-			int outerWidth = (int) (T2Config.WINDOW_WIDTH * outerRegress);
-			int outerHeight = (int) (T2Config.WINDOW_HEIGHT * outerRegress);
-			int outerX = (T2Config.WINDOW_WIDTH - outerWidth) / 2;
-			int outerY = (T2Config.WINDOW_HEIGHT - outerHeight) / 2;
+			int outerWidth = (int) (paneSize.width * outerRegress);
+			int outerHeight = (int) (paneSize.height * outerRegress);
+			int outerX = (paneSize.width - outerWidth) / 2;
+			int outerY = (paneSize.height - outerHeight) / 2;
 			g.setColor(TRANSITION_COLORS[colorIndex++ % TRANSITION_COLORS.length]);
 			g.fillRect(outerX, outerY, outerWidth, outerHeight);
 			g.setColor(Color.BLACK);
@@ -51,10 +54,10 @@ public class Transitions {
 
 		// Draw inner black box
 		double innerProgress = Math.max(0.0, 2.0 * progress - 0.5);
-		int innerWidth = (int) (T2Config.WINDOW_WIDTH * innerProgress);
-		int innerHeight = (int) (T2Config.WINDOW_HEIGHT * innerProgress);
-		int innerX = (T2Config.WINDOW_WIDTH - innerWidth) / 2;
-		int innerY = (T2Config.WINDOW_HEIGHT - innerHeight) / 2;
+		int innerWidth = (int) (paneSize.width * innerProgress);
+		int innerHeight = (int) (paneSize.height * innerProgress);
+		int innerX = (paneSize.width - innerWidth) / 2;
+		int innerY = (paneSize.height - innerHeight) / 2;
 		g.setColor(Color.BLACK);
 		g.fillRect(innerX, innerY, innerWidth, innerHeight);
 

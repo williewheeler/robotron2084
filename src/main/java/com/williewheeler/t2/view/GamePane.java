@@ -14,6 +14,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import static com.williewheeler.t2.T2Config.MOB_BORN_COUNTDOWN;
+import static com.williewheeler.t2.T2Config.MOB_BORN_DISTANCE;
+
 /**
  * Created by willie on 5/12/17.
  */
@@ -43,7 +46,7 @@ public class GamePane extends JComponent {
 		g.fillRect(0, 0, size.width, size.height);
 
 		if (transitions.isDisplayingTransition()) {
-			transitions.paintTransition(g);
+			transitions.paintTransition(this, g);
 		} else {
 			paintHeader(g);
 			paintArena(g);
@@ -89,16 +92,51 @@ public class GamePane extends JComponent {
 
 	private void paintEnemies(Graphics g) {
 		List<Grunt> grunts = gameState.getGrunts();
+		for (Grunt grunt : grunts) {
+			switch (grunt.getMobState()) {
+				case BORN:
+					paintGrunt_born(grunt, g);
+					break;
+				case ALIVE:
+					paintGrunt_alive(grunt, g);
+					break;
+				case DEAD:
+					paintGrunt_dead(grunt, g);
+					break;
+			}
+		}
+	}
 
+	// Do spaghettification effect
+	private void paintGrunt_born(Grunt grunt, Graphics g) {
+		BufferedImage sprite = spriteFactory.getGrunt()[0];
+
+		int gruntX = grunt.getX();
+		int gruntY = grunt.getY();
+		int bornCountdown = grunt.getBornCountdown();
+		double multiplier = (double) bornCountdown / MOB_BORN_COUNTDOWN;
+
+		int loY = gruntY - (int) (MOB_BORN_DISTANCE * multiplier);
+		int hiY = gruntY + (int) (MOB_BORN_DISTANCE * multiplier);
+		int dispX = X_OFFSET + gruntX - SPRITE_DISPLAY_SIZE / 2;
+		int dispY = Y_OFFSET + loY - SPRITE_DISPLAY_SIZE / 2;
+		int height = Math.max(SPRITE_DISPLAY_SIZE, hiY - loY);
+		BufferedImage spaghettified = Effects.spaghettify(sprite, height);
+		g.drawImage(spaghettified, dispX, dispY, SPRITE_DISPLAY_SIZE, height, null);
+
+	}
+
+	private void paintGrunt_alive(Grunt grunt, Graphics g) {
 		BufferedImage[] sprites = spriteFactory.getGrunt();
 		int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
+		int x = X_OFFSET + grunt.getX() - spriteOffset;
+		int y = Y_OFFSET + grunt.getY() - spriteOffset;
+		int spriteIndex = (x + y) % sprites.length;
+		g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
+	}
 
-		for (Grunt grunt : grunts) {
-			int x = X_OFFSET + grunt.getX() - spriteOffset;
-			int y = Y_OFFSET + grunt.getY() - spriteOffset;
-			int spriteIndex = (x + y) % sprites.length;
-			g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
-		}
+	private void paintGrunt_dead(Grunt grunt, Graphics g) {
+
 	}
 
 	private void paintPlayerMissiles(Graphics g) {

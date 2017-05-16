@@ -13,9 +13,13 @@ public class Grunt {
 	private static Random random = new Random();
 
 	private GameState gameState;
+	private MobState mobState = MobState.BORN;
 	private int x;
 	private int y;
-	private int moveIn = -1;
+
+	private int bornCountdown = random.nextInt(MOB_BORN_COUNTDOWN) + 10;
+	private int moveCountdown = -1;
+	private int deadCountdown = -1;
 
 	public Grunt(GameState gameState) {
 		this.gameState = gameState;
@@ -33,6 +37,14 @@ public class Grunt {
 		// TODO Push the grunt away from the center so it doesn't automatically kill the player on startup. [WLW]
 	}
 
+	public MobState getMobState() {
+		return mobState;
+	}
+
+	public int getBornCountdown() {
+		return bornCountdown;
+	}
+
 	public int getX() {
 		return x;
 	}
@@ -42,15 +54,38 @@ public class Grunt {
 	}
 
 	public void update() {
-		if (moveIn == -1) {
-			this.moveIn = random.nextInt(GRUNT_MOVE_MAX_PERIOD);
+		switch (mobState) {
+			case BORN:
+				updateBorn();
+				break;
+			case ALIVE:
+				updateAlive();
+				break;
+			case DEAD:
+				updateDead();
+				break;
+			case BURIED:
+				// No-op. Update loop will reclaim buried grunts.
+				break;
+			default:
+				throw new IllegalStateException("Unknown mobState: " + mobState);
 		}
+	}
 
-		if (moveIn == 0) {
+	private void updateBorn() {
+		if (--bornCountdown == -1) {
+			mobState = MobState.ALIVE;
+		}
+	}
+
+	private void updateAlive() {
+		if (moveCountdown == -1) {
+			this.moveCountdown = random.nextInt(GRUNT_MOVE_MAX_PERIOD);
+		}
+		if (moveCountdown == 0) {
 			moveTowardPlayer();
 		}
-
-		moveIn--;
+		moveCountdown--;
 	}
 
 	private void moveTowardPlayer() {
@@ -67,5 +102,9 @@ public class Grunt {
 		if (player.getY() < y) {
 			y -= GRUNT_MOVE_DISTANCE;
 		}
+	}
+
+	private void updateDead() {
+		// TODO
 	}
 }

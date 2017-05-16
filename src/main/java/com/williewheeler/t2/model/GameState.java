@@ -102,7 +102,10 @@ public class GameState {
 				int dist = MathUtil.distance(playerMissile.getX(), playerMissile.getY(), grunt.getX(), grunt.getY());
 				if (dist < COLLISION_DISTANCE) {
 					playerMissileIt.remove();
+
+					// TODO Set the grunt state to dead and remove it later
 					gruntIt.remove();
+
 					player.incrementScore(GRUNT_SCORE_VALUE);
 					fireGameEvent(GameEvent.EXPLODE);
 
@@ -120,10 +123,12 @@ public class GameState {
 		ListIterator<Grunt> gruntIt = grunts.listIterator();
 		while (gruntIt.hasNext()) {
 			Grunt grunt = gruntIt.next();
-			int dist = MathUtil.distance(player.getX(), player.getY(), grunt.getX(), grunt.getY());
-			if (dist < 20) {
-				player.setAlive(false);
-				fireGameEvent(GameEvent.PLAYER_DEAD);
+			if (grunt.getMobState() == MobState.ALIVE) {
+				int dist = MathUtil.distance(player.getX(), player.getY(), grunt.getX(), grunt.getY());
+				if (dist < 20) {
+					player.setAlive(false);
+					fireGameEvent(GameEvent.PLAYER_DEAD);
+				}
 			}
 		}
 	}

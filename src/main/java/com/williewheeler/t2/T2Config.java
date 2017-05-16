@@ -13,6 +13,10 @@ public class T2Config {
 	public static final int ARENA_WIDTH = WINDOW_WIDTH - 60;
 	public static final int ARENA_HEIGHT = WINDOW_HEIGHT - (HEADER_HEIGHT + 70);
 
+	public static final int MOB_BORN_COUNTDOWN = 10;
+	public static final int MOB_BORN_DISTANCE = 250;
+	public static final int MOB_DEAD_COUNTDOWN = 20;
+
 	public static final int PLAYER_START_X = ARENA_WIDTH / 2;
 	public static final int PLAYER_START_Y = ARENA_HEIGHT / 2;
 

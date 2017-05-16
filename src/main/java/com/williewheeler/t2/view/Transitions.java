@@ -31,45 +31,32 @@ public class Transitions {
 	// FIXME This needs some work to make it more faithful to the original.
 	// Also move this to its own class.
 	public void paintTransition(Graphics g) {
-
-		// First half we expand the colored box to the outside.
-		// Second half we expand a black box to the outside.
-
 		double progress = 1.0 - ((double) transitionCounter / T2Config.TRANSITION_LENGTH);
 
-		// Draw color box
-		double colorProgress = Math.min(1.0, 2.0 * progress);
-		int colorWidth = (int) (T2Config.WINDOW_WIDTH * colorProgress);
-		int colorHeight = (int) (T2Config.WINDOW_HEIGHT * colorProgress);
-
-		while (colorWidth > 0 && colorHeight > 0) {
-			int x = (T2Config.WINDOW_WIDTH - colorWidth) / 2;
-			int y = (T2Config.WINDOW_HEIGHT - colorHeight) / 2;
-
-			g.setColor(TRANSITION_COLORS[colorWidth % TRANSITION_COLORS.length]);
-			g.fillRect(x, y, colorWidth, colorHeight);
-
-			colorWidth -= 8;
-			colorHeight -= 8;
-
-			x = (T2Config.WINDOW_WIDTH - colorWidth) / 2;
-			y = (T2Config.WINDOW_HEIGHT - colorHeight) / 2;
-
+		// Draw outer colored box
+		double outerProgress = Math.min(1.0, 2.0 * progress);
+		double outerRegress = outerProgress;
+		int colorIndex = 0;
+		while (outerRegress > 0.0) {
+			int outerWidth = (int) (T2Config.WINDOW_WIDTH * outerRegress);
+			int outerHeight = (int) (T2Config.WINDOW_HEIGHT * outerRegress);
+			int outerX = (T2Config.WINDOW_WIDTH - outerWidth) / 2;
+			int outerY = (T2Config.WINDOW_HEIGHT - outerHeight) / 2;
+			g.setColor(TRANSITION_COLORS[colorIndex++ % TRANSITION_COLORS.length]);
+			g.fillRect(outerX, outerY, outerWidth, outerHeight);
 			g.setColor(Color.BLACK);
-			g.fillRect(x, y, colorWidth, colorHeight);
-
-			colorWidth -= 4;
-			colorHeight -= 4;
+			g.fillRect(outerX + 5, outerY + 5, Math.max(0, outerWidth - 10), Math.max(0, outerHeight - 10));
+			outerRegress -= 0.02;
 		}
 
 		// Draw inner black box
-		double blackProgress = Math.min(1.0, Math.max(0.0, 2.0 * progress - 1.0));
-		int blackWidth = (int) (T2Config.WINDOW_WIDTH * blackProgress);
-		int blackHeight = (int) (T2Config.WINDOW_HEIGHT * blackProgress);
+		double innerProgress = Math.max(0.0, 2.0 * progress - 0.5);
+		int innerWidth = (int) (T2Config.WINDOW_WIDTH * innerProgress);
+		int innerHeight = (int) (T2Config.WINDOW_HEIGHT * innerProgress);
+		int innerX = (T2Config.WINDOW_WIDTH - innerWidth) / 2;
+		int innerY = (T2Config.WINDOW_HEIGHT - innerHeight) / 2;
 		g.setColor(Color.BLACK);
-		int blackX = (T2Config.WINDOW_WIDTH - blackWidth) / 2;
-		int blackY = (T2Config.WINDOW_HEIGHT - blackHeight) / 2;
-		g.fillRect(blackX, blackY, blackWidth, blackHeight);
+		g.fillRect(innerX, innerY, innerWidth, innerHeight);
 
 		transitionCounter--;
 	}

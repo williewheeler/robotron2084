@@ -29,5 +29,5 @@ public class T2Config {
 
 	public static final int COLLISION_DISTANCE = 15;
 
-	public static final int TRANSITION_LENGTH = 90;
+	public static final int TRANSITION_LENGTH = 50;
 }

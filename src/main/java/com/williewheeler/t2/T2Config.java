@@ -18,9 +18,6 @@ public class T2Config {
 	public static final int ENTITY_DEAD_COUNTDOWN = 4;
 	public static final int ENTITY_DEAD_SPREAD = 40;
 
-	public static final int PLAYER_START_X = ARENA_WIDTH / 2;
-	public static final int PLAYER_START_Y = ARENA_HEIGHT / 2;
-
 	public static final int PLAYER_MOVE_DISTANCE = 8;
 	public static final int PLAYER_FIRE_DISTANCE = 20;
 	public static final int PLAYER_RECHARGE_PERIOD = 3;

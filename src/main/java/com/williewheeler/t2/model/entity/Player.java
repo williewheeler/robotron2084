@@ -18,8 +18,8 @@ public class Player {
 
 	private int score = 0;
 
-	private int x = PLAYER_START_X;
-	private int y = PLAYER_START_Y;
+	private int x;
+	private int y;
 
 	private boolean alive = true;
 
@@ -39,6 +39,7 @@ public class Player {
 
 	public Player(GameState gameState) {
 		this.gameState = gameState;
+		resetPosition();
 	}
 
 	public int getScore() {
@@ -55,6 +56,11 @@ public class Player {
 
 	public int getY() {
 		return y;
+	}
+
+	public void resetPosition() {
+		this.x = ARENA_WIDTH / 2;
+		this.y = ARENA_HEIGHT / 2;
 	}
 
 	public boolean isAlive() {

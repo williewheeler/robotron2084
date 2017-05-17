@@ -34,6 +34,8 @@ public class GameState {
 	private final List<Hulk> hulks = new LinkedList<>();
 	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 
+	private int cyclicCounter = 0;
+
 	private List<GameListener> gameListeners = new ArrayList<>();
 
 	public GameState() {
@@ -58,6 +60,7 @@ public class GameState {
 	public void startWave() {
 		Wave wave = WaveFactory.getWave(waveNumber);
 
+		player.resetPosition();
 		grunts.clear();
 		electrodes.clear();
 		hulks.clear();
@@ -80,8 +83,7 @@ public class GameState {
 		this.waveNumber++;
 		startWave();
 
-		// TODO Enter state where player can't walk around, shoot, etc.
-
+		// FIXME Enter state where player can't walk around, shoot, etc.
 		fireGameEvent(GameEvent.NEW_LEVEL);
 	}
 
@@ -108,6 +110,7 @@ public class GameState {
 			updateHulks();
 			updatePlayerMissiles();
 			collisionDetector.checkCollisions();
+			this.cyclicCounter = (cyclicCounter + 1) % 256;
 		}
 	}
 
@@ -117,6 +120,10 @@ public class GameState {
 		for (GameListener listener : gameListeners) {
 			listener.handleEvent(event);
 		}
+	}
+
+	public int getCyclicCounter() {
+		return cyclicCounter;
 	}
 
 	private void updateGrunts() {

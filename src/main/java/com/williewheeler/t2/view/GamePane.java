@@ -14,6 +14,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
+import java.awt.image.IndexColorModel;
+import java.awt.image.Raster;
+import java.awt.image.SampleModel;
+import java.awt.image.SinglePixelPackedSampleModel;
+import java.awt.image.WritableRaster;
 import java.util.List;
 
 import static com.williewheeler.t2.T2Config.*;
@@ -102,11 +110,15 @@ public class GamePane extends JComponent {
 	private void paintElectrodes(Graphics g) {
 		List<Electrode> electrodes = gameState.getElectrodes();
 		for (Electrode electrode : electrodes) {
-			BufferedImage sprite = spriteFactory.getElectrode()[0];
-			int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
+//			BufferedImage sprite = spriteFactory.getElectrode()[0];
+			BufferedImage sprite = createImage();
+			ColorModel colorModel = createColorModel(gameState.getCyclicCounter() / 255.0f);
+			sprite = new BufferedImage(colorModel, sprite.getRaster(), false, null);
+
+			int spriteOffset = 18 / 2;
 			int x = X_OFFSET + electrode.getX() - spriteOffset;
 			int y = Y_OFFSET + electrode.getY() - spriteOffset;
-			g.drawImage(sprite, x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
+			g.drawImage(sprite, x, y, 18, 18, null);
 		}
 	}
 
@@ -194,5 +206,32 @@ public class GamePane extends JComponent {
 		for (PlayerMissile missile : missiles) {
 			g.fillRect(X_OFFSET + missile.getX() - 2, Y_OFFSET + missile.getY() - 2, 4, 4);
 		}
+	}
+
+	private static BufferedImage createImage() {
+		int width = SPRITE_DISPLAY_SIZE;
+		int height = SPRITE_DISPLAY_SIZE;
+
+		// Generate the source pixels for our image
+		// Lets just keep it to a simple blank image for now
+		byte[] pixels = new byte[width * height];
+		DataBuffer dataBuffer = new DataBufferByte(pixels, width*height, 0);
+		SampleModel sampleModel =
+				new SinglePixelPackedSampleModel(DataBuffer.TYPE_BYTE, width, height, new int[] { (byte) 0xf });
+		WritableRaster raster = Raster.createWritableRaster(sampleModel, dataBuffer, null);
+		return new BufferedImage(createColorModel(0.0f), raster, false, null);
+	}
+
+	private static ColorModel createColorModel(float hue) {
+		int rgb = Color.HSBtoRGB(hue, 1.0f, 0.5f);
+		byte[] r = new byte[16];
+		byte[] g = new byte[16];
+		byte[] b = new byte[16];
+		for (int i = 0; i < r.length; i++) {
+			r[i] = (byte) ((rgb & 0xff000000) >> 24);
+			g[i] = (byte) ((rgb & 0x00ff0000) >> 16);
+			b[i] = (byte) ((rgb & 0x0000ff00) >> 8);
+		}
+		return new IndexColorModel(4, 16, r, g, b);
 	}
 }

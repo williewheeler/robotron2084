@@ -24,6 +24,7 @@ public class EntityEffects {
 			g2.fillRect(0, y, sourceWidth, 4);
 		}
 
+		g2.dispose();
 		return spaghettified;
 	}
 }

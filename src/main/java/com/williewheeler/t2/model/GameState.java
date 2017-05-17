@@ -27,24 +27,18 @@ public class GameState {
 	private CollisionDetector collisionDetector;
 
 	private Player player;
-	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
+	private int waveNumber;
 	private final List<Grunt> grunts = new LinkedList<>();
 	private final List<Hulk> hulks = new LinkedList<>();
+	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 
 	private List<GameListener> gameListeners = new ArrayList<>();
 
 	public GameState() {
 		this.collisionDetector = new CollisionDetector(this);
-
 		this.player = new Player(this);
-
-		// TODO Move these to Waves
-		for (int i = 0; i < 40; i++) {
-			grunts.add(new Grunt(this));
-		}
-		for (int i = 0; i < 6; i++) {
-			hulks.add(new Hulk(this));
-		}
+		this.waveNumber = 1;
+		startWave();
 	}
 
 	public void addGameListener(GameListener listener) {
@@ -53,6 +47,36 @@ public class GameState {
 
 	public Player getPlayer() {
 		return player;
+	}
+
+	public int getWaveNumber() {
+		return waveNumber;
+	}
+
+	public void startWave() {
+		Wave wave = WaveFactory.getWave(waveNumber);
+
+		grunts.clear();
+		hulks.clear();
+		playerMissiles.clear();
+
+		for (int i = 0; i < wave.getGrunts(); i++) {
+			grunts.add(new Grunt(this));
+		}
+		for (int i = 0; i < wave.getHulks(); i++) {
+			hulks.add(new Hulk(this));
+		}
+	}
+
+	public void nextWave() {
+
+		// FIXME Don't allow overflow
+		this.waveNumber++;
+		startWave();
+
+		// TODO Enter state where player can't walk around, shoot, etc.
+
+		fireGameEvent(GameEvent.NEW_LEVEL);
 	}
 
 	public List<PlayerMissile> getPlayerMissiles() {

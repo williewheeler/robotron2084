@@ -5,7 +5,6 @@ import com.williewheeler.t2.model.entity.Grunt;
 import com.williewheeler.t2.model.entity.Hulk;
 import com.williewheeler.t2.model.entity.Player;
 import com.williewheeler.t2.model.entity.PlayerMissile;
-import com.williewheeler.t2.model.event.GameEvent;
 import com.williewheeler.t2.util.MathUtil;
 
 import java.util.List;
@@ -23,12 +22,20 @@ public class CollisionDetector {
 		this.gameState = gameState;
 	}
 
+	// TODO Need a way to signal game over
 	public void checkCollisions() {
-		checkPlayerMissileCollisions();
-		checkPlayerCollision();
+		if (!checkPlayerMissileCollisions()) {
+			return;
+		}
+		if (!checkPlayerCollision()) {
+			return;
+		}
 	}
 
-	private void checkPlayerMissileCollisions() {
+	/**
+	 * @return boolean indicating whether to keep running checks
+	 */
+	private boolean checkPlayerMissileCollisions() {
 		Player player = gameState.getPlayer();
 		List<Grunt> grunts = gameState.getGrunts();
 		List<PlayerMissile> playerMissiles = gameState.getPlayerMissiles();
@@ -53,14 +60,20 @@ public class CollisionDetector {
 				} else if (gruntState == EntityState.BURIED) {
 					gruntIt.remove();
 					if (grunts.isEmpty()) {
-						gameState.fireGameEvent(GameEvent.NEW_LEVEL);
+						gameState.nextWave();
+						return false;
 					}
 				}
 			}
 		}
+
+		return true;
 	}
 
-	private void checkPlayerCollision() {
+	/**
+	 * @return boolean indicating whether to keep running checks
+	 */
+	private boolean checkPlayerCollision() {
 		Player player = gameState.getPlayer();
 
 		List<Grunt> grunts = gameState.getGrunts();
@@ -71,6 +84,7 @@ public class CollisionDetector {
 				int dist = MathUtil.distance(player.getX(), player.getY(), grunt.getX(), grunt.getY());
 				if (dist < 20) {
 					player.setAlive(false);
+					return false;
 				}
 			}
 		}
@@ -80,7 +94,10 @@ public class CollisionDetector {
 			int dist = MathUtil.distance(player.getX(), player.getY(), hulk.getX(), hulk.getY());
 			if (dist < 20) {
 				player.setAlive(false);
+				return false;
 			}
 		}
+
+		return true;
 	}
 }

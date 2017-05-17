@@ -2,6 +2,7 @@ package com.williewheeler.t2.view;
 
 import com.williewheeler.t2.T2Config;
 import com.williewheeler.t2.model.GameState;
+import com.williewheeler.t2.model.entity.Electrode;
 import com.williewheeler.t2.model.entity.Grunt;
 import com.williewheeler.t2.model.entity.Hulk;
 import com.williewheeler.t2.model.entity.Player;
@@ -16,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import static com.williewheeler.t2.T2Config.*;
+
+// TODO Use general g.translate() instead of always adding X_OFFSET and Y_OFFSET
 
 /**
  * Created by willie on 5/12/17.
@@ -91,8 +94,20 @@ public class GamePane extends JComponent {
 	}
 
 	private void paintEnemies(Graphics g) {
+		paintElectrodes(g);
 		paintGrunts(g);
 		paintHulks(g);
+	}
+
+	private void paintElectrodes(Graphics g) {
+		List<Electrode> electrodes = gameState.getElectrodes();
+		for (Electrode electrode : electrodes) {
+			BufferedImage sprite = spriteFactory.getElectrode()[0];
+			int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
+			int x = X_OFFSET + electrode.getX() - spriteOffset;
+			int y = Y_OFFSET + electrode.getY() - spriteOffset;
+			g.drawImage(sprite, x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
+		}
 	}
 
 	private void paintGrunts(Graphics g) {

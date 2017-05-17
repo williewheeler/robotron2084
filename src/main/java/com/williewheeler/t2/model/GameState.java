@@ -1,6 +1,7 @@
 package com.williewheeler.t2.model;
 
 import com.williewheeler.t2.T2Config;
+import com.williewheeler.t2.model.entity.Electrode;
 import com.williewheeler.t2.model.entity.Grunt;
 import com.williewheeler.t2.model.entity.Hulk;
 import com.williewheeler.t2.model.entity.Player;
@@ -29,6 +30,7 @@ public class GameState {
 	private Player player;
 	private int waveNumber;
 	private final List<Grunt> grunts = new LinkedList<>();
+	private final List<Electrode> electrodes = new LinkedList<>();
 	private final List<Hulk> hulks = new LinkedList<>();
 	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 
@@ -57,11 +59,15 @@ public class GameState {
 		Wave wave = WaveFactory.getWave(waveNumber);
 
 		grunts.clear();
+		electrodes.clear();
 		hulks.clear();
 		playerMissiles.clear();
 
 		for (int i = 0; i < wave.getGrunts(); i++) {
 			grunts.add(new Grunt(this));
+		}
+		for (int i = 0; i < wave.getElectrodes(); i++) {
+			electrodes.add(new Electrode(this));
 		}
 		for (int i = 0; i < wave.getHulks(); i++) {
 			hulks.add(new Hulk(this));
@@ -85,6 +91,10 @@ public class GameState {
 
 	public List<Grunt> getGrunts() {
 		return grunts;
+	}
+
+	public List<Electrode> getElectrodes() {
+		return electrodes;
 	}
 
 	public List<Hulk> getHulks() {

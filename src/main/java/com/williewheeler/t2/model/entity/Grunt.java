@@ -1,6 +1,6 @@
 package com.williewheeler.t2.model.entity;
 
-import com.williewheeler.t2.model.GameState;
+import com.williewheeler.t2.model.GameModel;
 import com.williewheeler.t2.model.event.GameEvent;
 import com.williewheeler.t2.util.MathUtil;
 
@@ -11,10 +11,10 @@ import static com.williewheeler.t2.T2Config.*;
 /**
  * Created by willie on 5/13/17.
  */
-public class Grunt {
+public class Grunt implements Entity {
 	private static Random random = new Random();
 
-	private GameState gameState;
+	private GameModel gameModel;
 	private EntityState entityState = EntityState.BORN;
 	private int x;
 	private int y;
@@ -26,12 +26,12 @@ public class Grunt {
 	// Hacky
 	private int numMoves = random.nextInt(4);
 
-	public Grunt(GameState gameState) {
-		this.gameState = gameState;
+	public Grunt(GameModel gameModel) {
+		this.gameModel = gameModel;
 		setEntityState(EntityState.BORN);
 
 		// TODO Extract this since other enemies use it.
-		Player player = gameState.getPlayer();
+		Player player = gameModel.getPlayer();
 		boolean tooClose = true;
 		while (tooClose) {
 			this.x = random.nextInt(ARENA_WIDTH);
@@ -50,7 +50,7 @@ public class Grunt {
 		this.entityState = entityState;
 
 		// Special handling for a couple cases
-		Player player = gameState.getPlayer();
+		Player player = gameModel.getPlayer();
 		switch (entityState) {
 			case BORN:
 				this.bornCountdown = ENTITY_BORN_COUNTDOWN;
@@ -58,7 +58,7 @@ public class Grunt {
 			case DEAD:
 				this.deadCountdown = ENTITY_DEAD_COUNTDOWN;
 				player.incrementScore(GRUNT_SCORE_VALUE);
-				gameState.fireGameEvent(GameEvent.EXPLODE);
+				gameModel.fireGameEvent(GameEvent.EXPLODE);
 				break;
 		}
 	}
@@ -71,10 +71,12 @@ public class Grunt {
 		return deadCountdown;
 	}
 
+	@Override
 	public int getX() {
 		return x;
 	}
 
+	@Override
 	public int getY() {
 		return y;
 	}
@@ -83,6 +85,7 @@ public class Grunt {
 		return numMoves;
 	}
 
+	@Override
 	public void update() {
 		switch (entityState) {
 			case BORN:
@@ -121,7 +124,7 @@ public class Grunt {
 	}
 
 	private void moveTowardPlayer() {
-		Player player = gameState.getPlayer();
+		Player player = gameModel.getPlayer();
 		if (player.getX() > x) {
 			x += GRUNT_MOVE_DISTANCE;
 		}

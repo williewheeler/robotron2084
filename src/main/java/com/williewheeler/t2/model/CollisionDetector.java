@@ -21,10 +21,10 @@ import static com.williewheeler.t2.T2Config.COLLISION_DISTANCE;
  * Created by willie on 5/15/17.
  */
 public class CollisionDetector {
-	private GameState gameState;
+	private GameModel gameModel;
 
-	public CollisionDetector(GameState gameState) {
-		this.gameState = gameState;
+	public CollisionDetector(GameModel gameModel) {
+		this.gameModel = gameModel;
 	}
 
 	// TODO Need a way to signal game over
@@ -41,11 +41,11 @@ public class CollisionDetector {
 	 * @return boolean indicating whether to keep running checks
 	 */
 	private boolean checkPlayerMissileCollisions() {
-		Player player = gameState.getPlayer();
-		List<PlayerMissile> playerMissiles = gameState.getPlayerMissiles();
+		Player player = gameModel.getPlayer();
+		List<PlayerMissile> playerMissiles = gameModel.getPlayerMissiles();
 
-		List<Grunt> grunts = gameState.getGrunts();
-		List<Electrode> electrodes = gameState.getElectrodes();
+		List<Grunt> grunts = gameModel.getGrunts();
+		List<Electrode> electrodes = gameModel.getElectrodes();
 
 		// TODO Use a spatial data structure (like k-d tree) to avoid linear search.
 		ListIterator<PlayerMissile> playerMissileIt = playerMissiles.listIterator();
@@ -70,7 +70,7 @@ public class CollisionDetector {
 				} else if (gruntState == EntityState.BURIED) {
 					gruntIt.remove();
 					if (grunts.isEmpty()) {
-						gameState.nextWave();
+						gameModel.nextWave();
 
 						// TODO Move this to the end of the method once we have other entities
 						return false;
@@ -82,7 +82,7 @@ public class CollisionDetector {
 			while (electrodeIt.hasNext()) {
 				Electrode electrode = electrodeIt.next();
 				int dist = MathUtil.distance(missileX, missileY, electrode.getX(), electrode.getY());
-				if (dist < COLLISION_DISTANCE) {
+				if (dist < 11) {
 					electrodeIt.remove();
 					continue processMissiles;
 				}
@@ -96,11 +96,11 @@ public class CollisionDetector {
 	 * @return boolean indicating whether to keep running checks
 	 */
 	private boolean checkPlayerCollision() {
-		Player player = gameState.getPlayer();
+		Player player = gameModel.getPlayer();
 		int playerX = player.getX();
 		int playerY = player.getY();
 
-		List<Grunt> grunts = gameState.getGrunts();
+		List<Grunt> grunts = gameModel.getGrunts();
 		ListIterator<Grunt> gruntIt = grunts.listIterator();
 		while (gruntIt.hasNext()) {
 			Grunt grunt = gruntIt.next();
@@ -113,7 +113,7 @@ public class CollisionDetector {
 			}
 		}
 
-		List<Electrode> electrodes = gameState.getElectrodes();
+		List<Electrode> electrodes = gameModel.getElectrodes();
 		for (Electrode electrode : electrodes) {
 			int dist = MathUtil.distance(playerX, playerY, electrode.getX(), electrode.getY());
 			if (dist < 20) {
@@ -122,7 +122,7 @@ public class CollisionDetector {
 			}
 		}
 
-		List<Hulk> hulks = gameState.getHulks();
+		List<Hulk> hulks = gameModel.getHulks();
 		for (Hulk hulk : hulks) {
 			int dist = MathUtil.distance(playerX, playerY, hulk.getX(), hulk.getY());
 			if (dist < 20) {

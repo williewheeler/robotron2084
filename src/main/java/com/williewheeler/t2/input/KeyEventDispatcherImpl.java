@@ -1,6 +1,6 @@
 package com.williewheeler.t2.input;
 
-import com.williewheeler.t2.model.GameState;
+import com.williewheeler.t2.model.GameModel;
 import com.williewheeler.t2.model.entity.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +14,10 @@ import java.awt.event.KeyEvent;
 public class KeyEventDispatcherImpl implements KeyEventDispatcher {
 	private static final Logger log = LoggerFactory.getLogger(KeyEventDispatcherImpl.class);
 
-	private GameState gameState;
+	private GameModel gameModel;
 
-	public KeyEventDispatcherImpl(GameState gameState) {
-		this.gameState = gameState;
+	public KeyEventDispatcherImpl(GameModel gameModel) {
+		this.gameModel = gameModel;
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class KeyEventDispatcherImpl implements KeyEventDispatcher {
 	}
 
 	private void action(int keyCode, boolean value) {
-		Player player = gameState.getPlayer();
+		Player player = gameModel.getPlayer();
 
 		// TODO Update this to WASD once this bug is resolved:
 		// http://stackoverflow.com/questions/43192166/on-mac-in-java-keypressed-event-doesnt-fire-for-certain-keys/43960171

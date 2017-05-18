@@ -2,7 +2,7 @@ package com.williewheeler.t2.model.entity;
 
 import com.williewheeler.t2.T2Config;
 import com.williewheeler.t2.model.event.GameEvent;
-import com.williewheeler.t2.model.GameState;
+import com.williewheeler.t2.model.GameModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +11,10 @@ import static com.williewheeler.t2.T2Config.*;
 /**
  * Created by willie on 5/13/17.
  */
-public class Player {
+public class Player implements Entity {
 	private static final Logger log = LoggerFactory.getLogger(Player.class);
 
-	private GameState gameState;
+	private GameModel gameModel;
 
 	private int score = 0;
 
@@ -37,8 +37,8 @@ public class Player {
 	private int rechargeCounter = -1;
 	private int walkCounter = -1;
 
-	public Player(GameState gameState) {
-		this.gameState = gameState;
+	public Player(GameModel gameModel) {
+		this.gameModel = gameModel;
 		resetPosition();
 	}
 
@@ -50,10 +50,12 @@ public class Player {
 		this.score += delta;
 	}
 
+	@Override
 	public int getX() {
 		return x;
 	}
 
+	@Override
 	public int getY() {
 		return y;
 	}
@@ -70,7 +72,7 @@ public class Player {
 	public void setAlive(boolean alive) {
 		this.alive = alive;
 		if (!alive) {
-			gameState.fireGameEvent(GameEvent.PLAYER_DEAD);
+			gameModel.fireGameEvent(GameEvent.PLAYER_DEAD);
 		}
 	}
 
@@ -106,6 +108,7 @@ public class Player {
 		this.fireRightIntent = fireRightIntent;
 	}
 
+	@Override
 	public void update() {
 //		log.trace("Updating game state");
 		updatePlayer();
@@ -137,7 +140,7 @@ public class Player {
 				walkCounter = PLAYER_WALK_PERIOD;
 			}
 			if (walkCounter-- == 0) {
-				gameState.fireGameEvent(GameEvent.WALK);
+				gameModel.fireGameEvent(GameEvent.WALK);
 			}
 		}
 
@@ -180,8 +183,8 @@ public class Player {
 
 			if (deltaX != 0 || deltaY != 0) {
 				PlayerMissile missile = new PlayerMissile(x, y, deltaX, deltaY);
-				gameState.getPlayerMissiles().add(missile);
-				gameState.fireGameEvent(GameEvent.SHOT);
+				gameModel.getPlayerMissiles().add(missile);
+				gameModel.fireGameEvent(GameEvent.SHOT);
 			}
 		}
 

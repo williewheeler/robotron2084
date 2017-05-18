@@ -5,7 +5,7 @@ import com.williewheeler.t2.audio.AudioFlags;
 import com.williewheeler.t2.input.KeyEventDispatcherImpl;
 import com.williewheeler.t2.model.event.GameEvent;
 import com.williewheeler.t2.model.event.GameListener;
-import com.williewheeler.t2.model.GameState;
+import com.williewheeler.t2.model.GameModel;
 import com.williewheeler.t2.view.GamePane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ import static com.williewheeler.t2.T2Config.*;
 public class T2 extends JFrame {
 	private static final Logger log = LoggerFactory.getLogger(T2.class);
 
-	private GameState gameState;
+	private GameModel gameModel;
 	private GamePane gamePane;
 	private AudioFactory audioFactory;
 	private AudioFlags audioFlags;
@@ -46,16 +46,16 @@ public class T2 extends JFrame {
 	public T2() {
 		super("T2");
 		registerFont();
-		this.gameState = new GameState();
-		this.gamePane = new GamePane(gameState);
+		this.gameModel = new GameModel();
+		this.gamePane = new GamePane(gameModel);
 		this.audioFactory = new AudioFactory();
 		this.audioFlags = new AudioFlags();
-		this.keyEventDispatcher = new KeyEventDispatcherImpl(gameState);
+		this.keyEventDispatcher = new KeyEventDispatcherImpl(gameModel);
 		this.tickHandler = new TickHandler();
 		this.gameHandler = new GameHandler();
 		this.timer = new Timer(FRAME_PERIOD, tickHandler);
 
-		gameState.addGameListener(gameHandler);
+		gameModel.addGameListener(gameHandler);
 	}
 
 	public void start() {
@@ -68,7 +68,7 @@ public class T2 extends JFrame {
 
 		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
 		timer.start();
-		gameState.fireGameEvent(GameEvent.FIRST_LEVEL);
+		gameModel.fireGameEvent(GameEvent.FIRST_LEVEL);
 	}
 
 	private void registerFont() {
@@ -109,7 +109,7 @@ public class T2 extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 //			log.trace("focusOwner={}", getFocusOwner());
-			gameState.update();
+			gameModel.update();
 
 			// TODO For tighter control, consider using active rendering here.
 			// See Killer Game Programming In Java, p. 21.

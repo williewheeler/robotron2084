@@ -4,6 +4,7 @@ import com.williewheeler.t2.T2Config;
 import com.williewheeler.t2.model.entity.Electrode;
 import com.williewheeler.t2.model.entity.Grunt;
 import com.williewheeler.t2.model.entity.Hulk;
+import com.williewheeler.t2.model.entity.Mommy;
 import com.williewheeler.t2.model.entity.Player;
 import com.williewheeler.t2.model.entity.PlayerMissile;
 import com.williewheeler.t2.model.event.GameEvent;
@@ -22,8 +23,8 @@ import java.util.ListIterator;
 /**
  * Created by willie on 5/12/17.
  */
-public class GameState {
-	private static final Logger log = LoggerFactory.getLogger(GameState.class);
+public class GameModel {
+	private static final Logger log = LoggerFactory.getLogger(GameModel.class);
 
 	private CollisionDetector collisionDetector;
 
@@ -31,6 +32,7 @@ public class GameState {
 	private int waveNumber;
 	private final List<Grunt> grunts = new LinkedList<>();
 	private final List<Electrode> electrodes = new LinkedList<>();
+	private final List<Mommy> mommies = new LinkedList<>();
 	private final List<Hulk> hulks = new LinkedList<>();
 	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 
@@ -38,7 +40,7 @@ public class GameState {
 
 	private List<GameListener> gameListeners = new ArrayList<>();
 
-	public GameState() {
+	public GameModel() {
 		this.collisionDetector = new CollisionDetector(this);
 		this.player = new Player(this);
 		this.waveNumber = 1;
@@ -63,6 +65,7 @@ public class GameState {
 		player.resetPosition();
 		grunts.clear();
 		electrodes.clear();
+		mommies.clear();
 		hulks.clear();
 		playerMissiles.clear();
 
@@ -71,6 +74,9 @@ public class GameState {
 		}
 		for (int i = 0; i < wave.getElectrodes(); i++) {
 			electrodes.add(new Electrode(this));
+		}
+		for (int i = 0; i < wave.getMommies(); i++) {
+			mommies.add(new Mommy(this));
 		}
 		for (int i = 0; i < wave.getHulks(); i++) {
 			hulks.add(new Hulk(this));
@@ -99,6 +105,10 @@ public class GameState {
 		return electrodes;
 	}
 
+	public List<Mommy> getMommies() {
+		return mommies;
+	}
+
 	public List<Hulk> getHulks() {
 		return hulks;
 	}
@@ -107,10 +117,11 @@ public class GameState {
 		if (player.isAlive()) {
 			player.update();
 			updateGrunts();
+			updateFamily();
 			updateHulks();
 			updatePlayerMissiles();
 			collisionDetector.checkCollisions();
-			this.cyclicCounter = (cyclicCounter + 1) % 256;
+			this.cyclicCounter = (cyclicCounter + 1) % 30;
 		}
 	}
 
@@ -128,6 +139,10 @@ public class GameState {
 
 	private void updateGrunts() {
 		grunts.stream().forEach(grunt -> grunt.update());
+	}
+
+	private void updateFamily() {
+		mommies.stream().forEach(mommy -> mommy.update());
 	}
 
 	private void updateHulks() {

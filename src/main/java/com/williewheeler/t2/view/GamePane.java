@@ -1,10 +1,11 @@
 package com.williewheeler.t2.view;
 
 import com.williewheeler.t2.T2Config;
-import com.williewheeler.t2.model.GameState;
+import com.williewheeler.t2.model.GameModel;
 import com.williewheeler.t2.model.entity.Electrode;
 import com.williewheeler.t2.model.entity.Grunt;
 import com.williewheeler.t2.model.entity.Hulk;
+import com.williewheeler.t2.model.entity.Mommy;
 import com.williewheeler.t2.model.entity.Player;
 import com.williewheeler.t2.model.entity.PlayerMissile;
 
@@ -36,13 +37,13 @@ public class GamePane extends JComponent {
 	private static final int X_OFFSET = 28;
 	private static final int Y_OFFSET = 16 + T2Config.HEADER_HEIGHT;
 
-	private GameState gameState;
+	private GameModel gameModel;
 	private Font font;
 	private SpriteFactory spriteFactory = new SpriteFactory();
 	private Transitions transitions = new Transitions();
 
-	public GamePane(GameState gameState) {
-		this.gameState = gameState;
+	public GamePane(GameModel gameModel) {
+		this.gameModel = gameModel;
 		this.font = new Font("Robotron", Font.BOLD, 20);
 	}
 
@@ -68,7 +69,7 @@ public class GamePane extends JComponent {
 	}
 
 	private Player getPlayer() {
-		return gameState.getPlayer();
+		return gameModel.getPlayer();
 	}
 
 	private void paintHeader(Graphics g) {
@@ -103,27 +104,40 @@ public class GamePane extends JComponent {
 
 	private void paintEnemies(Graphics g) {
 		paintElectrodes(g);
+		paintFamily(g);
 		paintGrunts(g);
 		paintHulks(g);
 	}
 
 	private void paintElectrodes(Graphics g) {
-		List<Electrode> electrodes = gameState.getElectrodes();
+		List<Electrode> electrodes = gameModel.getElectrodes();
 		for (Electrode electrode : electrodes) {
 //			BufferedImage sprite = spriteFactory.getElectrode()[0];
 			BufferedImage sprite = createImage();
-			ColorModel colorModel = createColorModel(gameState.getCyclicCounter() / 255.0f);
+			ColorModel colorModel = createColorModel(gameModel.getCyclicCounter() / 30.0f);
 			sprite = new BufferedImage(colorModel, sprite.getRaster(), false, null);
 
 			int spriteOffset = 18 / 2;
 			int x = X_OFFSET + electrode.getX() - spriteOffset;
 			int y = Y_OFFSET + electrode.getY() - spriteOffset;
-			g.drawImage(sprite, x, y, 18, 18, null);
+			g.drawImage(sprite, x, y, 14, 18, null);
+		}
+	}
+
+	private void paintFamily(Graphics g) {
+		List<Mommy> mommies = gameModel.getMommies();
+		for (Mommy mommy : mommies) {
+			BufferedImage[] sprites = spriteFactory.getMommy();
+			int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
+			int x = X_OFFSET + mommy.getX() - spriteOffset;
+			int y = Y_OFFSET + mommy.getY() - spriteOffset;
+			int spriteIndex = mommy.getNumMoves() % sprites.length;
+			g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
 		}
 	}
 
 	private void paintGrunts(Graphics g) {
-		List<Grunt> grunts = gameState.getGrunts();
+		List<Grunt> grunts = gameModel.getGrunts();
 		for (Grunt grunt : grunts) {
 			switch (grunt.getEntityState()) {
 				case BORN:
@@ -188,7 +202,7 @@ public class GamePane extends JComponent {
 	}
 
 	private void paintHulks(Graphics g) {
-		List<Hulk> hulks = gameState.getHulks();
+		List<Hulk> hulks = gameModel.getHulks();
 		for (Hulk hulk : hulks) {
 			BufferedImage[] sprites = spriteFactory.getHulk();
 			int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
@@ -200,7 +214,7 @@ public class GamePane extends JComponent {
 	}
 
 	private void paintPlayerMissiles(Graphics g) {
-		List<PlayerMissile> missiles = gameState.getPlayerMissiles();
+		List<PlayerMissile> missiles = gameModel.getPlayerMissiles();
 
 		g.setColor(Color.WHITE);
 		for (PlayerMissile missile : missiles) {
@@ -209,7 +223,7 @@ public class GamePane extends JComponent {
 	}
 
 	private static BufferedImage createImage() {
-		int width = SPRITE_DISPLAY_SIZE;
+		int width = SPRITE_DISPLAY_SIZE ;
 		int height = SPRITE_DISPLAY_SIZE;
 
 		// Generate the source pixels for our image

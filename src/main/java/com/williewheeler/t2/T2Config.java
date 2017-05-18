@@ -24,6 +24,9 @@ public class T2Config {
 	public static final int PLAYER_WALK_PERIOD = 4;
 	public static final int PLAYER_CLEAR_RADIUS = 200;
 
+	public static final int MOMMY_MOVE_DISTANCE = 5;
+	public static final int MOMMY_MOVE_PERIOD = 20;
+
 	// See https://strategywiki.org/wiki/Robotron:_2084/How_to_play for scores
 
 	public static final int GRUNT_MOVE_DISTANCE = 8;

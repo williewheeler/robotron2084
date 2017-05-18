@@ -14,6 +14,7 @@ public class SpriteFactory {
 	private BufferedImage[] player;
 	private BufferedImage[] grunt;
 	private BufferedImage[] electrode;
+	private BufferedImage[] mommy;
 	private BufferedImage[] hulk;
 
 	public SpriteFactory() {
@@ -45,6 +46,12 @@ public class SpriteFactory {
 		hulk[1] = sheet.getSubimage(1 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE + 1);
 		hulk[2] = hulk[0];
 		hulk[3] = sheet.getSubimage(2 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE + 1);
+
+		this.mommy = new BufferedImage[4];
+		mommy[0] = sheet.getSubimage(0 * SPRITE_SIZE, 5 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		mommy[1] = sheet.getSubimage(1 * SPRITE_SIZE, 5 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		mommy[2] = mommy[0];
+		mommy[3] = sheet.getSubimage(2 * SPRITE_SIZE, 5 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
 	}
 
 	public BufferedImage[] getPlayer() {
@@ -57,6 +64,10 @@ public class SpriteFactory {
 
 	public BufferedImage[] getElectrode() {
 		return electrode;
+	}
+
+	public BufferedImage[] getMommy() {
+		return mommy;
 	}
 
 	public BufferedImage[] getHulk() {

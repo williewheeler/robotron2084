@@ -18,23 +18,25 @@ public class RobotronConfig {
 	public static final int ENTITY_DEAD_COUNTDOWN = 4;
 	public static final int ENTITY_DEAD_SPREAD = 40;
 
-	public static final int PLAYER_MOVE_DISTANCE = 8;
+	public static final int PLAYER_MOVE_DISTANCE = 6;
 	public static final int PLAYER_FIRE_DISTANCE = 20;
 	public static final int PLAYER_RECHARGE_PERIOD = 3;
 	public static final int PLAYER_WALK_PERIOD = 4;
 	public static final int PLAYER_CLEAR_RADIUS = 200;
 
-	public static final int MOMMY_MOVE_DISTANCE = 5;
-	public static final int MOMMY_MOVE_PERIOD = 20;
+	public static final int MOMMY_MOVE_DISTANCE = 2;
+	public static final int MOMMY_MOVE_PERIOD = 3;
+	// FIXME
+	public static final int MOMMY_SCORE_VALUE = 1000;
 
 	// See https://strategywiki.org/wiki/Robotron:_2084/How_to_play for scores
 
 	public static final int GRUNT_MOVE_DISTANCE = 8;
-	public static final int GRUNT_MOVE_MAX_PERIOD = 10;
+	public static final int GRUNT_MOVE_MAX_PERIOD = 8;
 	public static final int GRUNT_SCORE_VALUE = 100;
 
-	public static final int HULK_MOVE_DISTANCE = 4;
-	public static final int HULK_MOVE_PERIOD = 5;
+	public static final int HULK_MOVE_DISTANCE = 3;
+	public static final int HULK_MOVE_PERIOD = 3;
 
 	public static final int COLLISION_DISTANCE = 15;
 }

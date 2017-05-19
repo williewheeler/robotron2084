@@ -100,6 +100,9 @@ public class Robotron extends JFrame {
 		if (audioFlags.isFlagSet(AudioFlags.PLAYER_DEAD)) {
 			audioFactory.playSoundEffect("playerdead");
 		}
+		if (audioFlags.isFlagSet(AudioFlags.RESCUE)) {
+			audioFactory.playSoundEffect("rescue");
+		}
 
 		audioFlags.clearFlags();
 	}
@@ -146,6 +149,11 @@ public class Robotron extends JFrame {
 				case GameEvent.PLAYER_DEAD:
 					audioFlags.setFlag(AudioFlags.PLAYER_DEAD);
 					break;
+				case GameEvent.RESCUE:
+					audioFlags.setFlag(AudioFlags.RESCUE);
+					break;
+				default:
+					throw new IllegalArgumentException("Unknown event type: " + type);
 			}
 		}
 	}

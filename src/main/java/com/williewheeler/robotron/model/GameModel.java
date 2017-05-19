@@ -87,10 +87,11 @@ public class GameModel {
 
 		// FIXME Don't allow overflow
 		this.waveNumber++;
-		startWave();
 
 		// FIXME Enter state where player can't walk around, shoot, etc.
 		fireGameEvent(GameEvent.NEW_LEVEL);
+
+		startWave();
 	}
 
 	public List<PlayerMissile> getPlayerMissiles() {

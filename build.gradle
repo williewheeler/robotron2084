@@ -1,7 +1,7 @@
 apply plugin: 'application'
 apply plugin: 'java'
 
-mainClassName = 'com.williewheeler.t2.T2'
+mainClassName = 'com.williewheeler.robotron.Robotron'
 
 repositories {
   jcenter()

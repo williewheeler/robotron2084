@@ -2,7 +2,9 @@ package com.williewheeler.robotron.view;
 
 import com.williewheeler.robotron.RobotronConfig;
 import com.williewheeler.robotron.model.GameModel;
+import com.williewheeler.robotron.model.entity.Daddy;
 import com.williewheeler.robotron.model.entity.Electrode;
+import com.williewheeler.robotron.model.entity.Entity;
 import com.williewheeler.robotron.model.entity.Grunt;
 import com.williewheeler.robotron.model.entity.Hulk;
 import com.williewheeler.robotron.model.entity.Mommy;
@@ -104,7 +106,7 @@ public class GamePane extends JComponent {
 
 	private void paintEnemies(Graphics g) {
 		paintElectrodes(g);
-		paintFamily(g);
+		paintHumans(g);
 		paintGrunts(g);
 		paintHulks(g);
 	}
@@ -124,14 +126,27 @@ public class GamePane extends JComponent {
 		}
 	}
 
-	private void paintFamily(Graphics g) {
-		List<Mommy> mommies = gameModel.getMommies();
-		for (Mommy mommy : mommies) {
-			BufferedImage[] sprites = spriteFactory.getMommy();
+	private void paintHumans(Graphics g) {
+		List<Entity> humans = gameModel.getHumans();
+		for (Entity human : humans) {
+			BufferedImage[] sprites = null;
+			int spriteIndex = -1;
+
+			// TODO Consider polymorphism
+			if (human instanceof Mommy) {
+				sprites = spriteFactory.getMommy();
+				spriteIndex = ((Mommy) human).getNumMoves() % sprites.length;
+			} else if (human instanceof Daddy) {
+				sprites = spriteFactory.getDaddy();
+				spriteIndex = ((Daddy) human).getNumMoves() % sprites.length;
+			} else {
+				// TODO
+			}
+
 			int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
-			int x = mommy.getX() - spriteOffset;
-			int y = mommy.getY() - spriteOffset;
-			int spriteIndex = mommy.getNumMoves() % sprites.length;
+			int x = human.getX() - spriteOffset;
+			int y = human.getY() - spriteOffset;
+
 			g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
 		}
 	}

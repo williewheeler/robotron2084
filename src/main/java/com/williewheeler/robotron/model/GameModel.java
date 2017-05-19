@@ -1,7 +1,9 @@
 package com.williewheeler.robotron.model;
 
 import com.williewheeler.robotron.RobotronConfig;
+import com.williewheeler.robotron.model.entity.Daddy;
 import com.williewheeler.robotron.model.entity.Electrode;
+import com.williewheeler.robotron.model.entity.Entity;
 import com.williewheeler.robotron.model.entity.Grunt;
 import com.williewheeler.robotron.model.entity.Hulk;
 import com.williewheeler.robotron.model.entity.Mommy;
@@ -32,7 +34,7 @@ public class GameModel {
 	private int waveNumber;
 	private final List<Grunt> grunts = new LinkedList<>();
 	private final List<Electrode> electrodes = new LinkedList<>();
-	private final List<Mommy> mommies = new LinkedList<>();
+	private final List<Entity> humans = new LinkedList<>();
 	private final List<Hulk> hulks = new LinkedList<>();
 	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 
@@ -65,7 +67,7 @@ public class GameModel {
 		player.resetPosition();
 		grunts.clear();
 		electrodes.clear();
-		mommies.clear();
+		humans.clear();
 		hulks.clear();
 		playerMissiles.clear();
 
@@ -76,7 +78,10 @@ public class GameModel {
 			electrodes.add(new Electrode(this));
 		}
 		for (int i = 0; i < wave.getMommies(); i++) {
-			mommies.add(new Mommy(this));
+			humans.add(new Mommy(this));
+		}
+		for (int i = 0; i < wave.getDaddies(); i++) {
+			humans.add(new Daddy(this));
 		}
 		for (int i = 0; i < wave.getHulks(); i++) {
 			hulks.add(new Hulk(this));
@@ -84,6 +89,7 @@ public class GameModel {
 	}
 
 	public void nextWave() {
+		this.cyclicCounter = 0;
 
 		// FIXME Don't allow overflow
 		this.waveNumber++;
@@ -106,8 +112,8 @@ public class GameModel {
 		return electrodes;
 	}
 
-	public List<Mommy> getMommies() {
-		return mommies;
+	public List<Entity> getHumans() {
+		return humans;
 	}
 
 	public List<Hulk> getHulks() {
@@ -116,13 +122,14 @@ public class GameModel {
 
 	public void update() {
 		if (player.isAlive()) {
+			this.cyclicCounter = (cyclicCounter + 1) % 20;
 			player.update();
 			updateGrunts();
 			updateFamily();
 			updateHulks();
 			updatePlayerMissiles();
 			collisionDetector.checkCollisions();
-			this.cyclicCounter = (cyclicCounter + 1) % 20;
+			checkNextWave();
 		}
 	}
 
@@ -143,7 +150,7 @@ public class GameModel {
 	}
 
 	private void updateFamily() {
-		mommies.stream().forEach(mommy -> mommy.update());
+		humans.stream().forEach(mommy -> mommy.update());
 	}
 
 	private void updateHulks() {
@@ -161,6 +168,12 @@ public class GameModel {
 			if (x < 0 || x > RobotronConfig.ARENA_WIDTH || y < 0 || y > RobotronConfig.ARENA_HEIGHT) {
 				playerMissileIt.remove();
 			}
+		}
+	}
+
+	private void checkNextWave() {
+		if (grunts.isEmpty()) {
+			nextWave();
 		}
 	}
 }

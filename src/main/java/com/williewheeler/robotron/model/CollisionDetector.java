@@ -1,10 +1,10 @@
 package com.williewheeler.robotron.model;
 
 import com.williewheeler.robotron.model.entity.Electrode;
+import com.williewheeler.robotron.model.entity.Entity;
 import com.williewheeler.robotron.model.entity.EntityState;
 import com.williewheeler.robotron.model.entity.Grunt;
 import com.williewheeler.robotron.model.entity.Hulk;
-import com.williewheeler.robotron.model.entity.Mommy;
 import com.williewheeler.robotron.model.entity.Player;
 import com.williewheeler.robotron.model.entity.PlayerMissile;
 import com.williewheeler.robotron.model.event.GameEvent;
@@ -16,10 +16,6 @@ import java.util.ListIterator;
 import static com.williewheeler.robotron.RobotronConfig.COLLISION_DISTANCE;
 import static com.williewheeler.robotron.RobotronConfig.MOMMY_SCORE_VALUE;
 
-// FIXME There is a bug where if you shoot a single shot to kill the last grunt, the level doesn't advance
-// til you fire one more shot. It's because the next level check occurs only in the context of the collision detection
-// process. [WLW]
-
 /**
  * Created by willie on 5/15/17.
  */
@@ -30,20 +26,12 @@ public class CollisionDetector {
 		this.gameModel = gameModel;
 	}
 
-	// TODO Need a way to signal game over
 	public void checkCollisions() {
 		checkRescueHuman();
 		checkHumanDied();
-
-		if (!checkPlayerShotEnemy()) {
-			return;
-		}
-		if (!checkGruntHitElectrode()) {
-			return;
-		}
-		if (!checkPlayerDied()) {
-			return;
-		}
+		checkPlayerShotEnemy();
+		checkGruntHitElectrode();
+		checkPlayerDied();
 	}
 
 	private void checkRescueHuman() {
@@ -51,14 +39,14 @@ public class CollisionDetector {
 		int playerX = player.getX();
 		int playerY = player.getY();
 
-		List<Mommy> mommies = gameModel.getMommies();
-		ListIterator<Mommy> mommyIt = mommies.listIterator();
+		List<Entity> humans = gameModel.getHumans();
+		ListIterator<Entity> humanIt = humans.listIterator();
 
-		while (mommyIt.hasNext()) {
-			Mommy mommy = mommyIt.next();
-			int dist = MathUtil.distance(playerX, playerY, mommy.getX(), mommy.getY());
+		while (humanIt.hasNext()) {
+			Entity human = humanIt.next();
+			int dist = MathUtil.distance(playerX, playerY, human.getX(), human.getY());
 			if (dist < COLLISION_DISTANCE) {
-				mommyIt.remove();
+				humanIt.remove();
 				player.incrementScore(MOMMY_SCORE_VALUE);
 				gameModel.fireGameEvent(GameEvent.HUMAN_RESCUED);
 			}
@@ -74,15 +62,15 @@ public class CollisionDetector {
 			int hulkX = hulk.getX();
 			int hulkY = hulk.getY();
 
-			List<Mommy> mommies = gameModel.getMommies();
-			ListIterator<Mommy> mommyIt = mommies.listIterator();
+			List<Entity> humans = gameModel.getHumans();
+			ListIterator<Entity> humanIt = humans.listIterator();
 
-			while (mommyIt.hasNext()) {
-				Mommy mommy = mommyIt.next();
+			while (humanIt.hasNext()) {
+				Entity human = humanIt.next();
 
-				int dist = MathUtil.distance(hulkX, hulkY, mommy.getX(), mommy.getY());
+				int dist = MathUtil.distance(hulkX, hulkY, human.getX(), human.getY());
 				if (dist < COLLISION_DISTANCE) {
-					mommyIt.remove();
+					humanIt.remove();
 					gameModel.fireGameEvent(GameEvent.HUMAN_DIED);
 				}
 			}
@@ -92,7 +80,7 @@ public class CollisionDetector {
 	/**
 	 * @return boolean indicating whether to keep running checks
 	 */
-	private boolean checkPlayerShotEnemy() {
+	private void checkPlayerShotEnemy() {
 		List<PlayerMissile> playerMissiles = gameModel.getPlayerMissiles();
 
 		// TODO Use a spatial data structure (like k-d tree) to avoid linear search.
@@ -118,12 +106,6 @@ public class CollisionDetector {
 					}
 				} else if (gruntState == EntityState.BURIED) {
 					gruntIt.remove();
-					if (grunts.isEmpty()) {
-						gameModel.nextWave();
-
-						// TODO Move this to the end of the method once we have other entities
-						return false;
-					}
 				}
 			}
 
@@ -138,8 +120,6 @@ public class CollisionDetector {
 				}
 			}
 		}
-
-		return true;
 	}
 
 	private boolean checkGruntHitElectrode() {
@@ -168,12 +148,6 @@ public class CollisionDetector {
 				}
 			} else if (gruntState == EntityState.BURIED) {
 				gruntIt.remove();
-				if (grunts.isEmpty()) {
-					gameModel.nextWave();
-
-					// TODO Move this to the end of the method once we have other entities
-					return false;
-				}
 			}
 		}
 
@@ -183,7 +157,7 @@ public class CollisionDetector {
 	/**
 	 * @return boolean indicating whether to keep running checks
 	 */
-	private boolean checkPlayerDied() {
+	private void checkPlayerDied() {
 		Player player = gameModel.getPlayer();
 		int playerX = player.getX();
 		int playerY = player.getY();
@@ -196,7 +170,6 @@ public class CollisionDetector {
 				int dist = MathUtil.distance(playerX, playerY, grunt.getX(), grunt.getY());
 				if (dist < 20) {
 					player.setAlive(false);
-					return false;
 				}
 			}
 		}
@@ -206,7 +179,6 @@ public class CollisionDetector {
 			int dist = MathUtil.distance(playerX, playerY, electrode.getX(), electrode.getY());
 			if (dist < 20) {
 				player.setAlive(false);
-				return false;
 			}
 		}
 
@@ -215,10 +187,7 @@ public class CollisionDetector {
 			int dist = MathUtil.distance(playerX, playerY, hulk.getX(), hulk.getY());
 			if (dist < 20) {
 				player.setAlive(false);
-				return false;
 			}
 		}
-
-		return true;
 	}
 }

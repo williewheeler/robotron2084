@@ -59,5 +59,6 @@ public class AudioFactory {
 		}
 
 		gainControlValues.put("walk", -10.0f);
+		gainControlValues.put("familydead", 5.0f);
 	}
 }

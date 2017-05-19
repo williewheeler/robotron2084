@@ -8,9 +8,9 @@ import java.util.Random;
 import static com.williewheeler.robotron.RobotronConfig.*;
 
 /**
- * Created by willie on 5/17/17.
+ * Created by willie on 5/19/17.
  */
-public class Mommy extends AbstractEntity {
+public class Daddy extends AbstractEntity {
 	private static Random random = new Random();
 
 	private GameModel gameModel;
@@ -19,7 +19,7 @@ public class Mommy extends AbstractEntity {
 	// FIXME Hacky
 	private int numMoves = random.nextInt(4);
 
-	public Mommy(GameModel gameModel) {
+	public Daddy(GameModel gameModel) {
 		this.gameModel = gameModel;
 
 		// TODO Extract this since other entities use it.

@@ -10,7 +10,8 @@ public class WaveFactory {
 			new Wave(22, 25, 2, 2, 2, 6, 0, 3, 0),    // 3
 			new Wave(34, 25, 2, 2, 2, 7, 0, 4, 0),    // 4
 			new Wave(20, 20, 15, 0, 1, 0, 15, 1, 0),  // 5
-			new Wave(32, 25, 3, 3, 3, 7, 0, 4, 0)     // 6
+			new Wave(32, 25, 3, 3, 3, 7, 0, 4, 0),    // 6
+			new Wave(0, 0, 4, 4 ,4, 12, 0, 0 ,10)     // 7
 	};
 
 	public static Wave getWave(int number) {

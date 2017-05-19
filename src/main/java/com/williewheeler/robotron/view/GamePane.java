@@ -27,8 +27,6 @@ import java.util.List;
 
 import static com.williewheeler.robotron.RobotronConfig.*;
 
-// TODO Use general g.translate() instead of always adding X_OFFSET and Y_OFFSET
-
 /**
  * Created by willie on 5/12/17.
  */

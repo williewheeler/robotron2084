@@ -114,7 +114,7 @@ public class GamePane extends JComponent {
 		for (Electrode electrode : electrodes) {
 //			BufferedImage sprite = spriteFactory.getElectrode()[0];
 			BufferedImage sprite = createImage();
-			ColorModel colorModel = createColorModel(gameModel.getCyclicCounter() / 30.0f);
+			ColorModel colorModel = createColorModel(gameModel.getCyclicCounter() / 20.0f);
 			sprite = new BufferedImage(colorModel, sprite.getRaster(), false, null);
 
 			int spriteOffset = 18 / 2;

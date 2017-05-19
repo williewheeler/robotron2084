@@ -89,6 +89,8 @@ public class CollisionDetector {
 			}
 		}
 
+		// TODO Check whether grunt hit an electrode
+
 		return true;
 	}
 

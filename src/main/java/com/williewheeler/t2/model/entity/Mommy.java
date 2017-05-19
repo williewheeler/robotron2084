@@ -7,15 +7,15 @@ import java.util.Random;
 
 import static com.williewheeler.t2.T2Config.*;
 
+// TODO extend AbstractEntity
+
 /**
  * Created by willie on 5/17/17.
  */
-public class Mommy implements Entity {
+public class Mommy extends AbstractEntity {
 	private static Random random = new Random();
 
 	private GameModel gameModel;
-	private int x;
-	private int y;
 	private int moveCountdown = -1;
 
 	// FIXME Hacky
@@ -28,22 +28,14 @@ public class Mommy implements Entity {
 		Player player = gameModel.getPlayer();
 		boolean tooClose = true;
 		while (tooClose) {
-			this.x = random.nextInt(ARENA_WIDTH);
-			this.y = random.nextInt(ARENA_HEIGHT);
+			int x = random.nextInt(ARENA_WIDTH);
+			int y = random.nextInt(ARENA_HEIGHT);
+			setX(x);
+			setY(y);
 			if (MathUtil.distance(x, y, player.getX(), player.getY()) > PLAYER_CLEAR_RADIUS) {
 				tooClose = false;
 			}
 		}
-	}
-
-	@Override
-	public int getX() {
-		return x;
-	}
-
-	@Override
-	public int getY() {
-		return y;
 	}
 
 	public int getNumMoves() {
@@ -65,17 +57,19 @@ public class Mommy implements Entity {
 
 	private void move() {
 		Player player = gameModel.getPlayer();
+		int x = getX();
+		int y = getY();
 		if (player.getX() > x) {
-			x += MOMMY_MOVE_DISTANCE;
+			incrX(MOMMY_MOVE_DISTANCE);
 		}
 		if (player.getX() < x) {
-			x -= MOMMY_MOVE_DISTANCE;
+			incrX(-MOMMY_MOVE_DISTANCE);
 		}
 		if (player.getY() > y) {
-			y += MOMMY_MOVE_DISTANCE;
+			incrY(MOMMY_MOVE_DISTANCE);
 		}
 		if (player.getY() < y) {
-			y -= MOMMY_MOVE_DISTANCE;
+			incrY(-MOMMY_MOVE_DISTANCE);
 		}
 	}
 }

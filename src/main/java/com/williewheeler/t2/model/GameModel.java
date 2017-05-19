@@ -121,7 +121,7 @@ public class GameModel {
 			updateHulks();
 			updatePlayerMissiles();
 			collisionDetector.checkCollisions();
-			this.cyclicCounter = (cyclicCounter + 1) % 30;
+			this.cyclicCounter = (cyclicCounter + 1) % 20;
 		}
 	}
 

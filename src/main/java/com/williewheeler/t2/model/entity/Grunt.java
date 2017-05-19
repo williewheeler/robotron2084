@@ -11,13 +11,11 @@ import static com.williewheeler.t2.T2Config.*;
 /**
  * Created by willie on 5/13/17.
  */
-public class Grunt implements Entity {
+public class Grunt extends AbstractEntity {
 	private static Random random = new Random();
 
 	private GameModel gameModel;
 	private EntityState entityState = EntityState.BORN;
-	private int x;
-	private int y;
 
 	private int bornCountdown = -1;
 	private int moveCountdown = -1;
@@ -31,11 +29,14 @@ public class Grunt implements Entity {
 		setEntityState(EntityState.BORN);
 
 		// TODO Extract this since other enemies use it.
+		// Better way to do this might be to use polar coordinates, and use a minimum radius
 		Player player = gameModel.getPlayer();
 		boolean tooClose = true;
 		while (tooClose) {
-			this.x = random.nextInt(ARENA_WIDTH);
-			this.y = random.nextInt(ARENA_HEIGHT);
+			int x = random.nextInt(ARENA_WIDTH);
+			int y = random.nextInt(ARENA_HEIGHT);
+			setX(x);
+			setY(y);
 			if (MathUtil.distance(x, y, player.getX(), player.getY()) > PLAYER_CLEAR_RADIUS) {
 				tooClose = false;
 			}
@@ -69,16 +70,6 @@ public class Grunt implements Entity {
 
 	public int getDeadCountdown() {
 		return deadCountdown;
-	}
-
-	@Override
-	public int getX() {
-		return x;
-	}
-
-	@Override
-	public int getY() {
-		return y;
 	}
 
 	public int getNumMoves() {
@@ -125,17 +116,20 @@ public class Grunt implements Entity {
 
 	private void moveTowardPlayer() {
 		Player player = gameModel.getPlayer();
+		int x = getX();
+		int y = getY();
+
 		if (player.getX() > x) {
-			x += GRUNT_MOVE_DISTANCE;
+			incrX(GRUNT_MOVE_DISTANCE);
 		}
 		if (player.getX() < x) {
-			x -= GRUNT_MOVE_DISTANCE;
+			incrX(-GRUNT_MOVE_DISTANCE);
 		}
 		if (player.getY() > y) {
-			y += GRUNT_MOVE_DISTANCE;
+			incrY(GRUNT_MOVE_DISTANCE);
 		}
 		if (player.getY() < y) {
-			y -= GRUNT_MOVE_DISTANCE;
+			incrY(-GRUNT_MOVE_DISTANCE);
 		}
 	}
 

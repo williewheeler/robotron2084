@@ -10,12 +10,10 @@ import static com.williewheeler.t2.T2Config.*;
 /**
  * Created by willie on 5/16/17.
  */
-public class Hulk implements Entity {
+public class Hulk extends AbstractEntity {
 	private static Random random = new Random();
 
 	private GameModel gameModel;
-	private int x;
-	private int y;
 	private int moveCountdown = -1;
 
 	// Hacky
@@ -28,22 +26,14 @@ public class Hulk implements Entity {
 		Player player = gameModel.getPlayer();
 		boolean tooClose = true;
 		while (tooClose) {
-			this.x = random.nextInt(ARENA_WIDTH);
-			this.y = random.nextInt(ARENA_HEIGHT);
+			int x = random.nextInt(ARENA_WIDTH);
+			int y = random.nextInt(ARENA_HEIGHT);
+			setX(x);
+			setY(y);
 			if (MathUtil.distance(x, y, player.getX(), player.getY()) > PLAYER_CLEAR_RADIUS) {
 				tooClose = false;
 			}
 		}
-	}
-
-	@Override
-	public int getX() {
-		return x;
-	}
-
-	@Override
-	public int getY() {
-		return y;
 	}
 
 	public int getNumMoves() {
@@ -60,17 +50,20 @@ public class Hulk implements Entity {
 
 				// FIXME This isn't really how the hulk moves, but we'll fix that.
 				Player player = gameModel.getPlayer();
+				int x = getX();
+				int y = getY();
+
 				if (player.getX() > x) {
-					x += HULK_MOVE_DISTANCE;
+					incrX(HULK_MOVE_DISTANCE);
 				}
 				if (player.getX() < x) {
-					x -= HULK_MOVE_DISTANCE;
+					incrX(-HULK_MOVE_DISTANCE);
 				}
 				if (player.getY() > y) {
-					y += HULK_MOVE_DISTANCE;
+					incrY(HULK_MOVE_DISTANCE);
 				}
 				if (player.getY() < y) {
-					y -= HULK_MOVE_DISTANCE;
+					incrY(-HULK_MOVE_DISTANCE);
 				}
 			}
 			moveCountdown--;

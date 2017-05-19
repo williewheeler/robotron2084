@@ -11,15 +11,12 @@ import static com.williewheeler.t2.T2Config.*;
 /**
  * Created by willie on 5/13/17.
  */
-public class Player implements Entity {
+public class Player extends AbstractEntity {
 	private static final Logger log = LoggerFactory.getLogger(Player.class);
 
 	private GameModel gameModel;
 
 	private int score = 0;
-
-	private int x;
-	private int y;
 
 	private boolean alive = true;
 
@@ -50,19 +47,9 @@ public class Player implements Entity {
 		this.score += delta;
 	}
 
-	@Override
-	public int getX() {
-		return x;
-	}
-
-	@Override
-	public int getY() {
-		return y;
-	}
-
 	public void resetPosition() {
-		this.x = ARENA_WIDTH / 2;
-		this.y = ARENA_HEIGHT / 2;
+		setX(ARENA_WIDTH / 2);
+		setY(ARENA_HEIGHT / 2);
 	}
 
 	public boolean isAlive() {
@@ -132,8 +119,8 @@ public class Player implements Entity {
 			deltaX += PLAYER_MOVE_DISTANCE;
 		}
 
-		x += deltaX;
-		y += deltaY;
+		incrX(deltaX);
+		incrY(deltaY);
 
 		if (deltaX != 0 || deltaY != 0) {
 			if (walkCounter == -1) {
@@ -145,17 +132,20 @@ public class Player implements Entity {
 		}
 
 		// Bounds check
+		int x = getX();
+		int y = getY();
+
 		if (x < 0) {
-			x = 0;
+			setX(0);
 		}
 		if (x > T2Config.ARENA_WIDTH) {
-			x = T2Config.ARENA_WIDTH;
+			setX(T2Config.ARENA_WIDTH);
 		}
 		if (y < 0) {
-			y = 0;
+			setY(0);
 		}
 		if (y > T2Config.ARENA_HEIGHT) {
-			y = T2Config.ARENA_HEIGHT;
+			setY(T2Config.ARENA_HEIGHT);
 		}
 	}
 
@@ -180,6 +170,9 @@ public class Player implements Entity {
 			if (fireRightIntent) {
 				deltaX += PLAYER_FIRE_DISTANCE;
 			}
+
+			int x = getX();
+			int y = getY();
 
 			if (deltaX != 0 || deltaY != 0) {
 				PlayerMissile missile = new PlayerMissile(x, y, deltaX, deltaY);

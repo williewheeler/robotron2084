@@ -32,7 +32,8 @@ public class CollisionDetector {
 
 	// TODO Need a way to signal game over
 	public void checkCollisions() {
-		checkRescue();
+		checkRescueHuman();
+		checkHumanDied();
 
 		if (!checkPlayerShotEnemy()) {
 			return;
@@ -45,7 +46,7 @@ public class CollisionDetector {
 		}
 	}
 
-	private void checkRescue() {
+	private void checkRescueHuman() {
 		Player player = gameModel.getPlayer();
 		int playerX = player.getX();
 		int playerY = player.getY();
@@ -59,7 +60,31 @@ public class CollisionDetector {
 			if (dist < COLLISION_DISTANCE) {
 				mommyIt.remove();
 				player.incrementScore(MOMMY_SCORE_VALUE);
-				gameModel.fireGameEvent(GameEvent.RESCUE);
+				gameModel.fireGameEvent(GameEvent.HUMAN_RESCUED);
+			}
+		}
+	}
+
+	private void checkHumanDied() {
+		List<Hulk> hulks = gameModel.getHulks();
+		ListIterator<Hulk> hulkIt = hulks.listIterator();
+
+		while (hulkIt.hasNext()) {
+			Hulk hulk = hulkIt.next();
+			int hulkX = hulk.getX();
+			int hulkY = hulk.getY();
+
+			List<Mommy> mommies = gameModel.getMommies();
+			ListIterator<Mommy> mommyIt = mommies.listIterator();
+
+			while (mommyIt.hasNext()) {
+				Mommy mommy = mommyIt.next();
+
+				int dist = MathUtil.distance(hulkX, hulkY, mommy.getX(), mommy.getY());
+				if (dist < COLLISION_DISTANCE) {
+					mommyIt.remove();
+					gameModel.fireGameEvent(GameEvent.HUMAN_DIED);
+				}
 			}
 		}
 	}
@@ -70,9 +95,6 @@ public class CollisionDetector {
 	private boolean checkPlayerShotEnemy() {
 		List<PlayerMissile> playerMissiles = gameModel.getPlayerMissiles();
 
-		List<Grunt> grunts = gameModel.getGrunts();
-		List<Electrode> electrodes = gameModel.getElectrodes();
-
 		// TODO Use a spatial data structure (like k-d tree) to avoid linear search.
 		ListIterator<PlayerMissile> playerMissileIt = playerMissiles.listIterator();
 
@@ -82,6 +104,7 @@ public class CollisionDetector {
 			int missileX = playerMissile.getX();
 			int missileY = playerMissile.getY();
 
+			List<Grunt> grunts = gameModel.getGrunts();
 			ListIterator<Grunt> gruntIt = grunts.listIterator();
 			while (gruntIt.hasNext()) {
 				Grunt grunt = gruntIt.next();
@@ -104,6 +127,7 @@ public class CollisionDetector {
 				}
 			}
 
+			List<Electrode> electrodes = gameModel.getElectrodes();
 			ListIterator<Electrode> electrodeIt = electrodes.listIterator();
 			while (electrodeIt.hasNext()) {
 				Electrode electrode = electrodeIt.next();

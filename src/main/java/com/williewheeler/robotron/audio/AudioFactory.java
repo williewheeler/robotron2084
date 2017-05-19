@@ -46,7 +46,7 @@ public class AudioFactory {
 	private void initSoundEffects(int clipsPerId) {
 		// TODO Lazy load
 		String[] ids = {
-				"explode", "rescue", "firstlevel", "newlevel", "playerdead", "shot", "walk"
+				"explode", "firstlevel", "familydead", "humanrescued", "newlevel", "playerdead", "shot", "walk"
 		};
 
 		// TODO Make this more generic, such as automatically loading all wavs in some directory or manifest. [WLW]

@@ -25,7 +25,7 @@ public class RobotronConfig {
 	public static final int PLAYER_CLEAR_RADIUS = 200;
 
 	public static final int MOMMY_MOVE_DISTANCE = 2;
-	public static final int MOMMY_MOVE_PERIOD = 3;
+	public static final int MOMMY_MOVE_PERIOD = 2;
 	// FIXME
 	public static final int MOMMY_SCORE_VALUE = 1000;
 
@@ -35,8 +35,8 @@ public class RobotronConfig {
 	public static final int GRUNT_MOVE_MAX_PERIOD = 8;
 	public static final int GRUNT_SCORE_VALUE = 100;
 
-	public static final int HULK_MOVE_DISTANCE = 3;
-	public static final int HULK_MOVE_PERIOD = 3;
+	public static final int HULK_MOVE_DISTANCE = 4;
+	public static final int HULK_MOVE_PERIOD = 2;
 
 	public static final int COLLISION_DISTANCE = 15;
 }

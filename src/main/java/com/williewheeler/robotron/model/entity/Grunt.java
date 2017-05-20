@@ -6,7 +6,7 @@ import com.williewheeler.robotron.util.MathUtil;
 
 import java.util.Random;
 
-import static com.williewheeler.robotron.RobotronConfig.*;
+import static com.williewheeler.robotron.GameConfig.*;
 
 /**
  * Created by willie on 5/13/17.

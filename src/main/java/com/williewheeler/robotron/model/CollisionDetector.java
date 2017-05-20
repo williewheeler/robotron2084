@@ -13,8 +13,8 @@ import com.williewheeler.robotron.util.MathUtil;
 import java.util.List;
 import java.util.ListIterator;
 
-import static com.williewheeler.robotron.RobotronConfig.COLLISION_DISTANCE;
-import static com.williewheeler.robotron.RobotronConfig.MOMMY_SCORE_VALUE;
+import static com.williewheeler.robotron.GameConfig.COLLISION_DISTANCE;
+import static com.williewheeler.robotron.GameConfig.MOMMY_SCORE_VALUE;
 
 /**
  * Created by willie on 5/15/17.

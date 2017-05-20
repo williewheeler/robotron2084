@@ -3,7 +3,7 @@ package com.williewheeler.robotron;
 /**
  * Created by willie on 5/12/17.
  */
-public class RobotronConfig {
+public class GameConfig {
 	public static final int FRAMES_PER_SECOND = 30;
 	public static final int FRAME_PERIOD = 1000 / FRAMES_PER_SECOND;
 

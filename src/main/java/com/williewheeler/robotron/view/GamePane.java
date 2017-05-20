@@ -1,8 +1,9 @@
 package com.williewheeler.robotron.view;
 
-import com.williewheeler.robotron.RobotronConfig;
+import com.williewheeler.robotron.GameConfig;
 import com.williewheeler.robotron.model.GameModel;
 import com.williewheeler.robotron.model.entity.Daddy;
+import com.williewheeler.robotron.model.entity.Direction;
 import com.williewheeler.robotron.model.entity.Electrode;
 import com.williewheeler.robotron.model.entity.Entity;
 import com.williewheeler.robotron.model.entity.Grunt;
@@ -27,7 +28,7 @@ import java.awt.image.SinglePixelPackedSampleModel;
 import java.awt.image.WritableRaster;
 import java.util.List;
 
-import static com.williewheeler.robotron.RobotronConfig.*;
+import static com.williewheeler.robotron.GameConfig.*;
 
 /**
  * Created by willie on 5/12/17.
@@ -35,7 +36,7 @@ import static com.williewheeler.robotron.RobotronConfig.*;
 public class GamePane extends JComponent {
 	private static final int SPRITE_DISPLAY_SIZE = 30;
 	private static final int XOFFSET = 28;
-	private static final int YOFFSET = 16 + RobotronConfig.HEADER_HEIGHT;
+	private static final int YOFFSET = 16 + GameConfig.HEADER_HEIGHT;
 
 	private GameModel gameModel;
 	private Font font;
@@ -77,17 +78,17 @@ public class GamePane extends JComponent {
 	private void paintHeader(Graphics g) {
 		g.setFont(font);
 		g.setColor(Color.CYAN);
-		g.drawString(String.valueOf(getPlayer().getScore()), 20, RobotronConfig.HEADER_HEIGHT - 8);
+		g.drawString(String.valueOf(getPlayer().getScore()), 20, GameConfig.HEADER_HEIGHT - 8);
 	}
 
 	private void paintArena(Graphics g) {
 		g.setColor(Color.RED);
 
 		Dimension mySize = getSize();
-		int extWidth = RobotronConfig.ARENA_WIDTH + SPRITE_DISPLAY_SIZE + 2;
-		int extHeight = RobotronConfig.ARENA_HEIGHT + SPRITE_DISPLAY_SIZE + 2;
+		int extWidth = GameConfig.ARENA_WIDTH + SPRITE_DISPLAY_SIZE + 2;
+		int extHeight = GameConfig.ARENA_HEIGHT + SPRITE_DISPLAY_SIZE + 2;
 		int x = (mySize.width - extWidth) / 2;
-		int y = RobotronConfig.HEADER_HEIGHT;
+		int y = GameConfig.HEADER_HEIGHT;
 
 		for (int i = 0; i < 3; i++) {
 			g.drawRect(x - i, y - i, extWidth + 2 * i, extHeight + 2 * i);
@@ -97,10 +98,34 @@ public class GamePane extends JComponent {
 	private void paintPlayer(Graphics g) {
 		Player player = getPlayer();
 		BufferedImage[] sprites = spriteFactory.getPlayer();
+
+		Direction direction = player.getDirection();
+		int spriteBaseIndex = 0;
+		switch (direction) {
+			case UP:
+				spriteBaseIndex = 4;
+				break;
+			case DOWN:
+				spriteBaseIndex = 0;
+				break;
+			case LEFT:
+			case UP_LEFT:
+			case DOWN_LEFT:
+				spriteBaseIndex = 12;
+				break;
+			case RIGHT:
+			case UP_RIGHT:
+			case DOWN_RIGHT:
+				spriteBaseIndex = 8;
+				break;
+		}
+		int spriteIndex = spriteBaseIndex + (player.getNumMoves() % 4);
+
 		int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
+
 		int x = player.getX() - spriteOffset;
 		int y = player.getY() - spriteOffset;
-		int spriteIndex = (x + y) % sprites.length;
+
 		g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
 	}
 
@@ -134,8 +159,32 @@ public class GamePane extends JComponent {
 
 			// TODO Consider polymorphism
 			if (human instanceof Mommy) {
+				Mommy mommy = (Mommy) human;
 				sprites = spriteFactory.getMommy();
-				spriteIndex = ((Mommy) human).getNumMoves() % sprites.length;
+
+//				spriteIndex = mommy.getNumMoves() % sprites.length;
+
+				Direction direction = mommy.getDirection();
+				int spriteBaseIndex = 0;
+				switch (direction) {
+					case UP:
+						spriteBaseIndex = 4;
+						break;
+					case DOWN:
+						spriteBaseIndex = 0;
+						break;
+					case LEFT:
+					case UP_LEFT:
+					case DOWN_LEFT:
+						spriteBaseIndex = 12;
+						break;
+					case RIGHT:
+					case UP_RIGHT:
+					case DOWN_RIGHT:
+						spriteBaseIndex = 8;
+						break;
+				}
+				spriteIndex = spriteBaseIndex + (mommy.getNumMoves() % 4);
 			} else if (human instanceof Daddy) {
 				sprites = spriteFactory.getDaddy();
 				spriteIndex = ((Daddy) human).getNumMoves() % sprites.length;

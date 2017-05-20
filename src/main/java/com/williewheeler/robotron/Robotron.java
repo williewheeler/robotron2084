@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.williewheeler.robotron.RobotronConfig.*;
+import static com.williewheeler.robotron.GameConfig.*;
 
 /**
  * Created by willie on 5/12/17.
@@ -30,6 +30,7 @@ import static com.williewheeler.robotron.RobotronConfig.*;
 public class Robotron extends JFrame {
 	private static final Logger log = LoggerFactory.getLogger(Robotron.class);
 
+	private GameState gameState;
 	private GameModel gameModel;
 	private GamePane gamePane;
 	private AudioFactory audioFactory;
@@ -46,6 +47,7 @@ public class Robotron extends JFrame {
 	public Robotron() {
 		super("Robotron: 2084");
 		registerFont();
+		this.gameState = GameState.TITLE;
 		this.gameModel = new GameModel();
 		this.gamePane = new GamePane(gameModel);
 		this.audioFactory = new AudioFactory();

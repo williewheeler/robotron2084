@@ -1,12 +1,11 @@
 package com.williewheeler.robotron.model.entity;
 
-import com.williewheeler.robotron.RobotronConfig;
-import com.williewheeler.robotron.model.event.GameEvent;
 import com.williewheeler.robotron.model.GameModel;
+import com.williewheeler.robotron.model.event.GameEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.williewheeler.robotron.RobotronConfig.*;
+import static com.williewheeler.robotron.GameConfig.*;
 
 /**
  * Created by willie on 5/13/17.
@@ -34,6 +33,8 @@ public class Player extends AbstractEntity {
 	private int rechargeCounter = -1;
 	private int walkCounter = -1;
 
+	private int numMoves = 0;
+
 	public Player(GameModel gameModel) {
 		this.gameModel = gameModel;
 		resetPosition();
@@ -50,6 +51,7 @@ public class Player extends AbstractEntity {
 	public void resetPosition() {
 		setX(ARENA_WIDTH / 2);
 		setY(ARENA_HEIGHT / 2);
+		setDirection(Direction.DOWN);
 	}
 
 	public boolean isAlive() {
@@ -95,9 +97,12 @@ public class Player extends AbstractEntity {
 		this.fireRightIntent = fireRightIntent;
 	}
 
+	public int getNumMoves() {
+		return numMoves;
+	}
+
 	@Override
 	public void update() {
-//		log.trace("Updating game state");
 		updatePlayer();
 		checkFireMissile();
 	}
@@ -106,46 +111,29 @@ public class Player extends AbstractEntity {
 		int deltaX = 0;
 		int deltaY = 0;
 
-		if (moveUpIntent) {
+		if (moveUpIntent && !moveDownIntent) {
 			deltaY -= PLAYER_MOVE_DISTANCE;
 		}
-		if (moveDownIntent) {
+		if (moveDownIntent && !moveUpIntent) {
 			deltaY += PLAYER_MOVE_DISTANCE;
 		}
-		if (moveLeftIntent) {
+		if (moveLeftIntent && !moveRightIntent) {
 			deltaX -= PLAYER_MOVE_DISTANCE;
 		}
-		if (moveRightIntent) {
+		if (moveRightIntent && !moveLeftIntent) {
 			deltaX += PLAYER_MOVE_DISTANCE;
 		}
 
-		incrX(deltaX);
-		incrY(deltaY);
+		move(deltaX, deltaY);
 
 		if (deltaX != 0 || deltaY != 0) {
+			this.numMoves++;
 			if (walkCounter == -1) {
 				walkCounter = PLAYER_WALK_PERIOD;
 			}
 			if (walkCounter-- == 0) {
 				gameModel.fireGameEvent(GameEvent.WALK);
 			}
-		}
-
-		// Bounds check
-		int x = getX();
-		int y = getY();
-
-		if (x < 0) {
-			setX(0);
-		}
-		if (x > RobotronConfig.ARENA_WIDTH) {
-			setX(RobotronConfig.ARENA_WIDTH);
-		}
-		if (y < 0) {
-			setY(0);
-		}
-		if (y > RobotronConfig.ARENA_HEIGHT) {
-			setY(RobotronConfig.ARENA_HEIGHT);
 		}
 	}
 

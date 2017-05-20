@@ -1,6 +1,6 @@
 package com.williewheeler.robotron.model;
 
-import com.williewheeler.robotron.RobotronConfig;
+import com.williewheeler.robotron.GameConfig;
 import com.williewheeler.robotron.model.entity.Daddy;
 import com.williewheeler.robotron.model.entity.Electrode;
 import com.williewheeler.robotron.model.entity.Entity;
@@ -165,7 +165,7 @@ public class GameModel {
 
 			int x = playerMissile.getX();
 			int y = playerMissile.getY();
-			if (x < 0 || x > RobotronConfig.ARENA_WIDTH || y < 0 || y > RobotronConfig.ARENA_HEIGHT) {
+			if (x < 0 || x > GameConfig.ARENA_WIDTH || y < 0 || y > GameConfig.ARENA_HEIGHT) {
 				playerMissileIt.remove();
 			}
 		}

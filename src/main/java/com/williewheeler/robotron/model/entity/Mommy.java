@@ -5,7 +5,7 @@ import com.williewheeler.robotron.util.MathUtil;
 
 import java.util.Random;
 
-import static com.williewheeler.robotron.RobotronConfig.*;
+import static com.williewheeler.robotron.GameConfig.*;
 
 /**
  * Created by willie on 5/17/17.
@@ -54,20 +54,29 @@ public class Mommy extends AbstractEntity {
 	}
 
 	private void move() {
+		final int tolerance = 3;
+
 		Player player = gameModel.getPlayer();
-		int x = getX();
-		int y = getY();
-		if (player.getX() > x) {
-			incrX(MOMMY_MOVE_DISTANCE);
+
+		int deltaX = player.getX() - getX();
+		int deltaY = player.getY() - getY();
+
+		int moveX = 0;
+		int moveY = 0;
+
+		if (deltaY < -tolerance) {
+			moveY = -MOMMY_MOVE_DISTANCE;
 		}
-		if (player.getX() < x) {
-			incrX(-MOMMY_MOVE_DISTANCE);
+		if (deltaY > tolerance) {
+			moveY = MOMMY_MOVE_DISTANCE;
 		}
-		if (player.getY() > y) {
-			incrY(MOMMY_MOVE_DISTANCE);
+		if (deltaX < -tolerance) {
+			moveX = -MOMMY_MOVE_DISTANCE;
 		}
-		if (player.getY() < y) {
-			incrY(-MOMMY_MOVE_DISTANCE);
+		if (deltaX > tolerance) {
+			moveX = MOMMY_MOVE_DISTANCE;
 		}
+
+		move(moveX, moveY);
 	}
 }

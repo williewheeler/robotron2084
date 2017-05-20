@@ -27,10 +27,7 @@ public class SpriteFactory {
 			throw new RuntimeException(e);
 		}
 
-		this.player = new BufferedImage[3];
-		for (int i = 0; i < 3; i++) {
-			player[i] = sheet.getSubimage(i * SPRITE_SIZE, 0 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-		}
+		this.player = buildSpriteArray(sheet, 0);
 
 		this.grunt = new BufferedImage[4];
 		grunt[0] = sheet.getSubimage(0 * SPRITE_SIZE, 1 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
@@ -48,17 +45,30 @@ public class SpriteFactory {
 		hulk[2] = hulk[0];
 		hulk[3] = sheet.getSubimage(2 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE + 1);
 
-		this.mommy = new BufferedImage[4];
-		mommy[0] = sheet.getSubimage(0 * SPRITE_SIZE, 5 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-		mommy[1] = sheet.getSubimage(1 * SPRITE_SIZE, 5 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-		mommy[2] = mommy[0];
-		mommy[3] = sheet.getSubimage(2 * SPRITE_SIZE, 5 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		this.mommy = buildSpriteArray(sheet, 5);
 
 		this.daddy = new BufferedImage[4];
 		daddy[0] = sheet.getSubimage(0 * SPRITE_SIZE, 6 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
 		daddy[1] = sheet.getSubimage(1 * SPRITE_SIZE, 6 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
 		daddy[2] = daddy[0];
 		daddy[3] = sheet.getSubimage(2 * SPRITE_SIZE, 6 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+	}
+
+	private BufferedImage[] buildSpriteArray(BufferedImage sheet, int rowIndex) {
+		BufferedImage[] spriteArr = new BufferedImage[16];
+
+		// Iterate over the four directions
+		for (int i = 0; i < 4; i++) {
+			int baseArrIndex = 4 * i;
+			int baseSprIndex = 3 * i;
+			int y = rowIndex * SPRITE_SIZE;
+			spriteArr[baseArrIndex] = sheet.getSubimage(baseSprIndex * SPRITE_SIZE, y, SPRITE_SIZE, SPRITE_SIZE);
+			spriteArr[baseArrIndex + 1] = sheet.getSubimage((baseSprIndex + 1) * SPRITE_SIZE, y, SPRITE_SIZE, SPRITE_SIZE);
+			spriteArr[baseArrIndex + 2] = spriteArr[baseArrIndex];
+			spriteArr[baseArrIndex + 3] = sheet.getSubimage((baseSprIndex + 2) * SPRITE_SIZE, y, SPRITE_SIZE, SPRITE_SIZE);
+		}
+
+		return spriteArr;
 	}
 
 	public BufferedImage[] getPlayer() {
@@ -84,4 +94,5 @@ public class SpriteFactory {
 	public BufferedImage[] getHulk() {
 		return hulk;
 	}
+
 }

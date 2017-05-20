@@ -5,6 +5,7 @@ import com.williewheeler.robotron.model.entity.Entity;
 import com.williewheeler.robotron.model.entity.EntityState;
 import com.williewheeler.robotron.model.entity.Grunt;
 import com.williewheeler.robotron.model.entity.Hulk;
+import com.williewheeler.robotron.model.entity.Human;
 import com.williewheeler.robotron.model.entity.Player;
 import com.williewheeler.robotron.model.entity.PlayerMissile;
 import com.williewheeler.robotron.model.event.GameEvent;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import static com.williewheeler.robotron.GameConfig.COLLISION_DISTANCE;
-import static com.williewheeler.robotron.GameConfig.MOMMY_SCORE_VALUE;
+import static com.williewheeler.robotron.GameConfig.HUMAN_SCORE_VALUE;
 
 /**
  * Created by willie on 5/15/17.
@@ -39,15 +40,15 @@ public class CollisionDetector {
 		int playerX = player.getX();
 		int playerY = player.getY();
 
-		List<Entity> humans = gameModel.getHumans();
-		ListIterator<Entity> humanIt = humans.listIterator();
+		List<Human> humans = gameModel.getHumans();
+		ListIterator<Human> humanIt = humans.listIterator();
 
 		while (humanIt.hasNext()) {
 			Entity human = humanIt.next();
 			int dist = MathUtil.distance(playerX, playerY, human.getX(), human.getY());
 			if (dist < COLLISION_DISTANCE) {
 				humanIt.remove();
-				player.incrementScore(MOMMY_SCORE_VALUE);
+				player.incrementScore(HUMAN_SCORE_VALUE);
 				gameModel.fireGameEvent(GameEvent.HUMAN_RESCUED);
 			}
 		}
@@ -62,8 +63,8 @@ public class CollisionDetector {
 			int hulkX = hulk.getX();
 			int hulkY = hulk.getY();
 
-			List<Entity> humans = gameModel.getHumans();
-			ListIterator<Entity> humanIt = humans.listIterator();
+			List<Human> humans = gameModel.getHumans();
+			ListIterator<Human> humanIt = humans.listIterator();
 
 			while (humanIt.hasNext()) {
 				Entity human = humanIt.next();

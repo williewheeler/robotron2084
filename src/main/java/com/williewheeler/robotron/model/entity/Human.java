@@ -8,18 +8,21 @@ import java.util.Random;
 import static com.williewheeler.robotron.GameConfig.*;
 
 /**
- * Created by willie on 5/19/17.
+ * Created by willie on 5/17/17.
  */
-public class Daddy extends AbstractEntity {
+public class Human extends AbstractEntity {
+	private static final int TOLERANCE = 3;
 	private static Random random = new Random();
 
+	private HumanType type;
 	private GameModel gameModel;
 	private int moveCountdown = -1;
 
 	// FIXME Hacky
 	private int numMoves = random.nextInt(4);
 
-	public Daddy(GameModel gameModel) {
+	public Human(HumanType type, GameModel gameModel) {
+		this.type = type;
 		this.gameModel = gameModel;
 
 		// TODO Extract this since other entities use it.
@@ -36,6 +39,10 @@ public class Daddy extends AbstractEntity {
 		}
 	}
 
+	public HumanType getType() {
+		return type;
+	}
+
 	public int getNumMoves() {
 		return numMoves;
 	}
@@ -43,7 +50,7 @@ public class Daddy extends AbstractEntity {
 	@Override
 	public void update() {
 		if (moveCountdown < 0) {
-			this.moveCountdown = MOMMY_MOVE_PERIOD;
+			this.moveCountdown = HUMAN_MOVE_PERIOD;
 		} else {
 			if (moveCountdown == 0) {
 				numMoves++;
@@ -55,19 +62,26 @@ public class Daddy extends AbstractEntity {
 
 	private void move() {
 		Player player = gameModel.getPlayer();
-		int x = getX();
-		int y = getY();
-		if (player.getX() > x) {
-			incrX(MOMMY_MOVE_DISTANCE);
+
+		int deltaX = player.getX() - getX();
+		int deltaY = player.getY() - getY();
+
+		int moveX = 0;
+		int moveY = 0;
+
+		if (deltaY < -TOLERANCE) {
+			moveY = -HUMAN_MOVE_DISTANCE;
 		}
-		if (player.getX() < x) {
-			incrX(-MOMMY_MOVE_DISTANCE);
+		if (deltaY > TOLERANCE) {
+			moveY = HUMAN_MOVE_DISTANCE;
 		}
-		if (player.getY() > y) {
-			incrY(MOMMY_MOVE_DISTANCE);
+		if (deltaX < -TOLERANCE) {
+			moveX = -HUMAN_MOVE_DISTANCE;
 		}
-		if (player.getY() < y) {
-			incrY(-MOMMY_MOVE_DISTANCE);
+		if (deltaX > TOLERANCE) {
+			moveX = HUMAN_MOVE_DISTANCE;
 		}
+
+		move(moveX, moveY);
 	}
 }

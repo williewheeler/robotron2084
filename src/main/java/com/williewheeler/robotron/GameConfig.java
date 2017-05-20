@@ -24,10 +24,10 @@ public class GameConfig {
 	public static final int PLAYER_WALK_PERIOD = 4;
 	public static final int PLAYER_CLEAR_RADIUS = 200;
 
-	public static final int MOMMY_MOVE_DISTANCE = 2;
-	public static final int MOMMY_MOVE_PERIOD = 1;
+	public static final int HUMAN_MOVE_DISTANCE = 2;
+	public static final int HUMAN_MOVE_PERIOD = 1;
 	// FIXME
-	public static final int MOMMY_SCORE_VALUE = 1000;
+	public static final int HUMAN_SCORE_VALUE = 1000;
 
 	// See https://strategywiki.org/wiki/Robotron:_2084/How_to_play for scores
 

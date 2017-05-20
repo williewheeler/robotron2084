@@ -46,12 +46,7 @@ public class SpriteFactory {
 		hulk[3] = sheet.getSubimage(2 * SPRITE_SIZE, 2 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE + 1);
 
 		this.mommy = buildSpriteArray(sheet, 5);
-
-		this.daddy = new BufferedImage[4];
-		daddy[0] = sheet.getSubimage(0 * SPRITE_SIZE, 6 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-		daddy[1] = sheet.getSubimage(1 * SPRITE_SIZE, 6 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
-		daddy[2] = daddy[0];
-		daddy[3] = sheet.getSubimage(2 * SPRITE_SIZE, 6 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		this.daddy = buildSpriteArray(sheet, 6);
 	}
 
 	private BufferedImage[] buildSpriteArray(BufferedImage sheet, int rowIndex) {

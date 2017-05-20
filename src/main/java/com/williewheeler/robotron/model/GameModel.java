@@ -1,12 +1,11 @@
 package com.williewheeler.robotron.model;
 
 import com.williewheeler.robotron.GameConfig;
-import com.williewheeler.robotron.model.entity.Daddy;
 import com.williewheeler.robotron.model.entity.Electrode;
-import com.williewheeler.robotron.model.entity.Entity;
 import com.williewheeler.robotron.model.entity.Grunt;
 import com.williewheeler.robotron.model.entity.Hulk;
-import com.williewheeler.robotron.model.entity.Mommy;
+import com.williewheeler.robotron.model.entity.Human;
+import com.williewheeler.robotron.model.entity.HumanType;
 import com.williewheeler.robotron.model.entity.Player;
 import com.williewheeler.robotron.model.entity.PlayerMissile;
 import com.williewheeler.robotron.model.event.GameEvent;
@@ -34,7 +33,7 @@ public class GameModel {
 	private int waveNumber;
 	private final List<Grunt> grunts = new LinkedList<>();
 	private final List<Electrode> electrodes = new LinkedList<>();
-	private final List<Entity> humans = new LinkedList<>();
+	private final List<Human> humans = new LinkedList<>();
 	private final List<Hulk> hulks = new LinkedList<>();
 	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 
@@ -78,10 +77,10 @@ public class GameModel {
 			electrodes.add(new Electrode(this));
 		}
 		for (int i = 0; i < wave.getMommies(); i++) {
-			humans.add(new Mommy(this));
+			humans.add(new Human(HumanType.MOMMY, this));
 		}
 		for (int i = 0; i < wave.getDaddies(); i++) {
-			humans.add(new Daddy(this));
+			humans.add(new Human(HumanType.DADDY, this));
 		}
 		for (int i = 0; i < wave.getHulks(); i++) {
 			hulks.add(new Hulk(this));
@@ -112,7 +111,7 @@ public class GameModel {
 		return electrodes;
 	}
 
-	public List<Entity> getHumans() {
+	public List<Human> getHumans() {
 		return humans;
 	}
 

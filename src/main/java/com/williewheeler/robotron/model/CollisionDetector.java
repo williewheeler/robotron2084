@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import static com.williewheeler.robotron.GameConfig.COLLISION_DISTANCE;
-import static com.williewheeler.robotron.GameConfig.HUMAN_SCORE_VALUE;
 
 /**
  * Created by willie on 5/15/17.
@@ -48,7 +47,8 @@ public class CollisionDetector {
 				int dist = MathUtil.distance(playerX, playerY, human.getX(), human.getY());
 				if (dist < COLLISION_DISTANCE) {
 					human.setState(EntityState.RESCUED);
-					player.incrementScore(HUMAN_SCORE_VALUE);
+					gameModel.incrementHumanScore();
+					player.incrementScore(gameModel.getHumanScore());
 					gameModel.fireGameEvent(GameEvent.HUMAN_RESCUED);
 				}
 			}

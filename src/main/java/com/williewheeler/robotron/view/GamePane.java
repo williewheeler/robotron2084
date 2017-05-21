@@ -139,7 +139,9 @@ public class GamePane extends JComponent {
 					sprite = humanSprites[spriteIndex];
 					break;
 				case RESCUED:
-					sprite = spriteFactory.getHumanRescued()[0];
+					BufferedImage[] scoreSprites = spriteFactory.getHumanRescued();
+					int humanScore = gameModel.getHumanScore();
+					sprite = scoreSprites[humanScore / 1000 - 1];
 					break;
 				case DEAD:
 					sprite = spriteFactory.getHumanDead();

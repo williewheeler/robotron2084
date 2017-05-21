@@ -39,6 +39,7 @@ public class GameModel {
 	private final List<PlayerMissile> playerMissiles = new LinkedList<>();
 
 	private int cyclicCounter = 0;
+	private int humanScore = 0;
 
 	private List<GameListener> gameListeners = new ArrayList<>();
 
@@ -61,8 +62,20 @@ public class GameModel {
 		return waveNumber;
 	}
 
+	public int getHumanScore() {
+		return humanScore;
+	}
+
+	public void incrementHumanScore() {
+		if (humanScore < 5000) {
+			humanScore += 1000;
+		}
+	}
+
 	public void startWave() {
 		Wave wave = WaveFactory.getWave(waveNumber);
+
+		this.humanScore = 0;
 
 		player.resetPosition();
 		grunts.clear();

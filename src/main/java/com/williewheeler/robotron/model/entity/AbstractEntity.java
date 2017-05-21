@@ -6,9 +6,19 @@ import com.williewheeler.robotron.GameConfig;
  * Created by willie on 5/17/17.
  */
 public abstract class AbstractEntity implements Entity {
+	private EntityState state;
 	private int x;
 	private int y;
 	private Direction direction = Direction.DOWN;
+
+	@Override
+	public EntityState getState() {
+		return state;
+	}
+
+	public void setState(EntityState state) {
+		this.state = state;
+	}
 
 	@Override
 	public int getX() {

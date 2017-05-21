@@ -17,6 +17,8 @@ public class SpriteFactory {
 	private BufferedImage[] mommy;
 	private BufferedImage[] daddy;
 	private BufferedImage[] mikey;
+	private BufferedImage humanDead;
+	private BufferedImage[] humanRescued;
 	private BufferedImage[] hulk;
 
 	public SpriteFactory() {
@@ -49,6 +51,15 @@ public class SpriteFactory {
 		this.mommy = buildSpriteArray(sheet, 5);
 		this.daddy = buildSpriteArray(sheet, 6);
 		this.mikey = buildSpriteArray(sheet, 7);
+
+		this.humanDead = sheet.getSubimage(0, 8 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+
+		this.humanRescued = new BufferedImage[5];
+		humanRescued[0] = sheet.getSubimage(1 * SPRITE_SIZE, 8 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		humanRescued[1] = sheet.getSubimage(2 * SPRITE_SIZE, 8 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		humanRescued[2] = sheet.getSubimage(3 * SPRITE_SIZE, 8 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		humanRescued[3] = sheet.getSubimage(4 * SPRITE_SIZE, 8 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
+		humanRescued[4] = sheet.getSubimage(5 * SPRITE_SIZE, 8 * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
 	}
 
 	private BufferedImage[] buildSpriteArray(BufferedImage sheet, int rowIndex) {
@@ -90,6 +101,14 @@ public class SpriteFactory {
 
 	public BufferedImage[] getMikey() {
 		return mikey;
+	}
+
+	public BufferedImage getHumanDead() {
+		return humanDead;
+	}
+
+	public BufferedImage[] getHumanRescued() {
+		return humanRescued;
 	}
 
 	public BufferedImage[] getHulk() {

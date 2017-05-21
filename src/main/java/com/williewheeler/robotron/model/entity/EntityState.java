@@ -7,5 +7,10 @@ public enum EntityState {
 	BORN,
 	ALIVE,
 	DEAD,
-	BURIED
+	RESCUED,
+
+	/**
+	 * Indicates that the entity is gone and ready for garbage collection.
+	 */
+	GONE
 }

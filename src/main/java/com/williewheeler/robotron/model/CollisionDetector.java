@@ -1,7 +1,6 @@
 package com.williewheeler.robotron.model;
 
 import com.williewheeler.robotron.model.entity.Electrode;
-import com.williewheeler.robotron.model.entity.Entity;
 import com.williewheeler.robotron.model.entity.EntityState;
 import com.williewheeler.robotron.model.entity.Grunt;
 import com.williewheeler.robotron.model.entity.Hulk;
@@ -28,14 +27,14 @@ public class CollisionDetector {
 	}
 
 	public void checkCollisions() {
-		checkRescueHuman();
-		checkHumanDied();
+		checkHumanRescued();
+		checkHumanDead();
 		checkPlayerShotEnemy();
 		checkGruntHitElectrode();
 		checkPlayerDied();
 	}
 
-	private void checkRescueHuman() {
+	private void checkHumanRescued() {
 		Player player = gameModel.getPlayer();
 		int playerX = player.getX();
 		int playerY = player.getY();
@@ -44,17 +43,19 @@ public class CollisionDetector {
 		ListIterator<Human> humanIt = humans.listIterator();
 
 		while (humanIt.hasNext()) {
-			Entity human = humanIt.next();
-			int dist = MathUtil.distance(playerX, playerY, human.getX(), human.getY());
-			if (dist < COLLISION_DISTANCE) {
-				humanIt.remove();
-				player.incrementScore(HUMAN_SCORE_VALUE);
-				gameModel.fireGameEvent(GameEvent.HUMAN_RESCUED);
+			Human human = humanIt.next();
+			if (human.getState() == EntityState.ALIVE) {
+				int dist = MathUtil.distance(playerX, playerY, human.getX(), human.getY());
+				if (dist < COLLISION_DISTANCE) {
+					human.setState(EntityState.RESCUED);
+					player.incrementScore(HUMAN_SCORE_VALUE);
+					gameModel.fireGameEvent(GameEvent.HUMAN_RESCUED);
+				}
 			}
 		}
 	}
 
-	private void checkHumanDied() {
+	private void checkHumanDead() {
 		List<Hulk> hulks = gameModel.getHulks();
 		ListIterator<Hulk> hulkIt = hulks.listIterator();
 
@@ -67,12 +68,13 @@ public class CollisionDetector {
 			ListIterator<Human> humanIt = humans.listIterator();
 
 			while (humanIt.hasNext()) {
-				Entity human = humanIt.next();
-
-				int dist = MathUtil.distance(hulkX, hulkY, human.getX(), human.getY());
-				if (dist < COLLISION_DISTANCE) {
-					humanIt.remove();
-					gameModel.fireGameEvent(GameEvent.HUMAN_DIED);
+				Human human = humanIt.next();
+				if (human.getState() == EntityState.ALIVE) {
+					int dist = MathUtil.distance(hulkX, hulkY, human.getX(), human.getY());
+					if (dist < COLLISION_DISTANCE) {
+						human.setState(EntityState.DEAD);
+						gameModel.fireGameEvent(GameEvent.HUMAN_DIED);
+					}
 				}
 			}
 		}
@@ -97,15 +99,15 @@ public class CollisionDetector {
 			ListIterator<Grunt> gruntIt = grunts.listIterator();
 			while (gruntIt.hasNext()) {
 				Grunt grunt = gruntIt.next();
-				EntityState gruntState = grunt.getEntityState();
+				EntityState gruntState = grunt.getState();
 				if (gruntState == EntityState.ALIVE) {
 					int dist = MathUtil.distance(missileX, missileY, grunt.getX(), grunt.getY());
 					if (dist < COLLISION_DISTANCE) {
 						playerMissileIt.remove();
-						grunt.setEntityState(EntityState.DEAD);
+						grunt.setState(EntityState.DEAD);
 						continue processMissiles;
 					}
-				} else if (gruntState == EntityState.BURIED) {
+				} else if (gruntState == EntityState.GONE) {
 					gruntIt.remove();
 				}
 			}
@@ -130,7 +132,7 @@ public class CollisionDetector {
 		processGrunts:
 		while (gruntIt.hasNext()) {
 			Grunt grunt = gruntIt.next();
-			EntityState gruntState = grunt.getEntityState();
+			EntityState gruntState = grunt.getState();
 			if (gruntState == EntityState.ALIVE) {
 				int gruntX = grunt.getX();
 				int gruntY = grunt.getY();
@@ -143,11 +145,11 @@ public class CollisionDetector {
 					int dist = MathUtil.distance(gruntX, gruntY, electrode.getX(), electrode.getY());
 					if (dist < COLLISION_DISTANCE) {
 						electrodeIt.remove();
-						grunt.setEntityState(EntityState.DEAD);
+						grunt.setState(EntityState.DEAD);
 						continue processGrunts;
 					}
 				}
-			} else if (gruntState == EntityState.BURIED) {
+			} else if (gruntState == EntityState.GONE) {
 				gruntIt.remove();
 			}
 		}
@@ -167,7 +169,7 @@ public class CollisionDetector {
 		ListIterator<Grunt> gruntIt = grunts.listIterator();
 		while (gruntIt.hasNext()) {
 			Grunt grunt = gruntIt.next();
-			if (grunt.getEntityState() == EntityState.ALIVE) {
+			if (grunt.getState() == EntityState.ALIVE) {
 				int dist = MathUtil.distance(playerX, playerY, grunt.getX(), grunt.getY());
 				if (dist < 20) {
 					player.setAlive(false);

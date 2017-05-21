@@ -8,6 +8,8 @@ package com.williewheeler.robotron.model.entity;
  */
 public interface Entity {
 
+	EntityState getState();
+
 	int getX();
 
 	int getY();

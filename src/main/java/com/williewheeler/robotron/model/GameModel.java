@@ -2,6 +2,7 @@ package com.williewheeler.robotron.model;
 
 import com.williewheeler.robotron.GameConfig;
 import com.williewheeler.robotron.model.entity.Electrode;
+import com.williewheeler.robotron.model.entity.EntityState;
 import com.williewheeler.robotron.model.entity.Grunt;
 import com.williewheeler.robotron.model.entity.Hulk;
 import com.williewheeler.robotron.model.entity.Human;
@@ -137,7 +138,13 @@ public class GameModel {
 
 	public void fireGameEvent(int type) {
 		// TODO Consider caching events instead of creating a new one each time.
+		fireGameEvent(type, 0, 0);
+	}
+
+	public void fireGameEvent(int type, int x, int y) {
 		GameEvent event = new GameEvent(this, type);
+		event.setX(x);
+		event.setY(y);
 		for (GameListener listener : gameListeners) {
 			listener.handleEvent(event);
 		}
@@ -152,7 +159,14 @@ public class GameModel {
 	}
 
 	private void updateFamily() {
-		humans.stream().forEach(mommy -> mommy.update());
+		humans.stream().forEach(human -> human.update());
+		ListIterator<Human> humanIt = humans.listIterator();
+		while (humanIt.hasNext()) {
+			Human human = humanIt.next();
+			if (human.getState() == EntityState.GONE) {
+				humanIt.remove();
+			}
+		}
 	}
 
 	private void updateHulks() {

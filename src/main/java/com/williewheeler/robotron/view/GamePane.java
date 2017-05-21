@@ -62,10 +62,18 @@ public class GamePane extends JComponent {
 		} else {
 			paintHeader(g);
 			paintArena(g);
+
 			g.translate(XOFFSET, YOFFSET);
-			paintEnemies(g);
+			paintElectrodes(g);
+			paintGrunts(g);
+			paintHulks(g);
 			paintPlayer(g);
 			paintPlayerMissiles(g);
+
+			// Painting this last because I want the rescued/dead sprites on top.
+			// But it might make sense to decouple painting the human from painting the rescued/dead sprites.
+			paintHumans(g);
+
 			g.translate(-XOFFSET, -YOFFSET);
 		}
 	}
@@ -94,28 +102,6 @@ public class GamePane extends JComponent {
 		}
 	}
 
-	private void paintPlayer(Graphics g) {
-		Player player = getPlayer();
-		BufferedImage[] sprites = spriteFactory.getPlayer();
-
-		Direction direction = player.getDirection();
-		int spriteBaseIndex = getSpriteBaseIndex(direction);
-		int spriteIndex = spriteBaseIndex + (player.getNumMoves() % 4);
-
-		int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
-		int x = player.getX() - spriteOffset;
-		int y = player.getY() - spriteOffset;
-
-		g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
-	}
-
-	private void paintEnemies(Graphics g) {
-		paintElectrodes(g);
-		paintHumans(g);
-		paintGrunts(g);
-		paintHulks(g);
-	}
-
 	private void paintElectrodes(Graphics g) {
 		List<Electrode> electrodes = gameModel.getElectrodes();
 		for (Electrode electrode : electrodes) {
@@ -134,33 +120,44 @@ public class GamePane extends JComponent {
 	private void paintHumans(Graphics g) {
 		List<Human> humans = gameModel.getHumans();
 		for (Human human : humans) {
-			BufferedImage[] sprites = null;
-			HumanType type = human.getType();
-			if (type == HumanType.MOMMY) {
-				sprites = spriteFactory.getMommy();
-			} else if (type == HumanType.DADDY) {
-				sprites = spriteFactory.getDaddy();
-			} else if (type == HumanType.MIKEY){
-				sprites = spriteFactory.getMikey();
-			} else {
-				throw new RuntimeException("Illegal human type: " + type);
+			BufferedImage sprite = null;
+			switch (human.getState()) {
+				case ALIVE:
+					BufferedImage[] humanSprites = null;
+					HumanType type = human.getType();
+					if (type == HumanType.MOMMY) {
+						humanSprites = spriteFactory.getMommy();
+					} else if (type == HumanType.DADDY) {
+						humanSprites = spriteFactory.getDaddy();
+					} else if (type == HumanType.MIKEY){
+						humanSprites = spriteFactory.getMikey();
+					} else {
+						throw new RuntimeException("Illegal human type: " + type);
+					}
+					int spriteBaseIndex = getSpriteBaseIndex(human.getDirection());
+					int spriteIndex = spriteBaseIndex + human.getNumMoves() % 4;
+					sprite = humanSprites[spriteIndex];
+					break;
+				case RESCUED:
+					sprite = spriteFactory.getHumanRescued()[0];
+					break;
+				case DEAD:
+					sprite = spriteFactory.getHumanDead();
+					break;
 			}
-
-			int spriteBaseIndex = getSpriteBaseIndex(human.getDirection());
-			int spriteIndex = spriteBaseIndex + human.getNumMoves() % 4;
 
 			int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
 			int x = human.getX() - spriteOffset;
 			int y = human.getY() - spriteOffset;
 
-			g.drawImage(sprites[spriteIndex], x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
+			g.drawImage(sprite, x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
 		}
 	}
 
 	private void paintGrunts(Graphics g) {
 		List<Grunt> grunts = gameModel.getGrunts();
 		for (Grunt grunt : grunts) {
-			switch (grunt.getEntityState()) {
+			switch (grunt.getState()) {
 				case BORN:
 					paintGrunt_born(grunt, g);
 					break;
@@ -234,6 +231,22 @@ public class GamePane extends JComponent {
 		}
 	}
 
+	private void paintPlayer(Graphics g) {
+		Player player = getPlayer();
+
+		BufferedImage[] sprites = spriteFactory.getPlayer();
+		Direction direction = player.getDirection();
+		int spriteBaseIndex = getSpriteBaseIndex(direction);
+		int spriteIndex = spriteBaseIndex + (player.getNumMoves() % 4);
+		BufferedImage sprite = sprites[spriteIndex];
+
+		int spriteOffset = SPRITE_DISPLAY_SIZE / 2;
+		int x = player.getX() - spriteOffset;
+		int y = player.getY() - spriteOffset;
+
+		g.drawImage(sprite, x, y, SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE, null);
+	}
+
 	private void paintPlayerMissiles(Graphics g) {
 		List<PlayerMissile> missiles = gameModel.getPlayerMissiles();
 
@@ -258,6 +271,8 @@ public class GamePane extends JComponent {
 	}
 
 	private static ColorModel createColorModel(float hue) {
+
+		// TODO Can we simply precalculate and cache these?
 		int rgb = Color.HSBtoRGB(hue, 1.0f, 0.5f);
 		byte[] r = new byte[16];
 		byte[] g = new byte[16];

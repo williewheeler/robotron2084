@@ -134,18 +134,18 @@ public class GamePane extends JComponent {
 	private void paintHumans(Graphics g) {
 		List<Human> humans = gameModel.getHumans();
 		for (Human human : humans) {
-
-			// TODO Consider polymorphism
 			BufferedImage[] sprites = null;
 			HumanType type = human.getType();
 			if (type == HumanType.MOMMY) {
 				sprites = spriteFactory.getMommy();
 			} else if (type == HumanType.DADDY) {
 				sprites = spriteFactory.getDaddy();
+			} else if (type == HumanType.MIKEY){
+				sprites = spriteFactory.getMikey();
 			} else {
-				// TODO
+				throw new RuntimeException("Illegal human type: " + type);
 			}
-			
+
 			int spriteBaseIndex = getSpriteBaseIndex(human.getDirection());
 			int spriteIndex = spriteBaseIndex + human.getNumMoves() % 4;
 

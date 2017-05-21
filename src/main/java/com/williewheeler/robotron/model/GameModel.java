@@ -82,6 +82,9 @@ public class GameModel {
 		for (int i = 0; i < wave.getDaddies(); i++) {
 			humans.add(new Human(HumanType.DADDY, this));
 		}
+		for (int i = 0; i < wave.getMikeys(); i++) {
+			humans.add(new Human(HumanType.MIKEY, this));
+		}
 		for (int i = 0; i < wave.getHulks(); i++) {
 			hulks.add(new Hulk(this));
 		}

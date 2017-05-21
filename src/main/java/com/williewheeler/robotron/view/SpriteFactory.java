@@ -16,6 +16,7 @@ public class SpriteFactory {
 	private BufferedImage[] electrode;
 	private BufferedImage[] mommy;
 	private BufferedImage[] daddy;
+	private BufferedImage[] mikey;
 	private BufferedImage[] hulk;
 
 	public SpriteFactory() {
@@ -47,6 +48,7 @@ public class SpriteFactory {
 
 		this.mommy = buildSpriteArray(sheet, 5);
 		this.daddy = buildSpriteArray(sheet, 6);
+		this.mikey = buildSpriteArray(sheet, 7);
 	}
 
 	private BufferedImage[] buildSpriteArray(BufferedImage sheet, int rowIndex) {
@@ -86,8 +88,11 @@ public class SpriteFactory {
 		return daddy;
 	}
 
+	public BufferedImage[] getMikey() {
+		return mikey;
+	}
+
 	public BufferedImage[] getHulk() {
 		return hulk;
 	}
-
 }

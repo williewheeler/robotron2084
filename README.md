@@ -6,7 +6,7 @@ Clone of one of my favorite games.
 
 To run it, type
 
-    $ ./gradle run
+    $ ./gradlew run
 
 Move using TFGH, and fire using the arrow keys.
 

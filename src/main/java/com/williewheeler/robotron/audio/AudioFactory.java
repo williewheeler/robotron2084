@@ -21,6 +21,7 @@ public class AudioFactory {
 
 		// Use the # of available processors since this is the most we can run at once anyway.
 		int clipsPerId = Runtime.getRuntime().availableProcessors();
+//		int clipsPerId = 1;
 		initSoundEffects(clipsPerId);
 	}
 

@@ -35,8 +35,9 @@ public class GameConfig {
 	public static final int GRUNT_MOVE_MAX_PERIOD = 15;
 	public static final int GRUNT_SCORE_VALUE = 100;
 
-	public static final int HULK_MOVE_DISTANCE = 10;
+	public static final int HULK_MOVE_DISTANCE = 8;
 	public static final int HULK_MOVE_PERIOD = 5;
+	public static final int HULK_KNOCKBACK_DISTANCE = 10;
 
 	public static final int COLLISION_DISTANCE = 15;
 }

@@ -1,5 +1,6 @@
 package com.williewheeler.robotron.model;
 
+import com.williewheeler.robotron.model.entity.Direction;
 import com.williewheeler.robotron.model.entity.Electrode;
 import com.williewheeler.robotron.model.entity.EntityState;
 import com.williewheeler.robotron.model.entity.Grunt;
@@ -9,16 +10,21 @@ import com.williewheeler.robotron.model.entity.Player;
 import com.williewheeler.robotron.model.entity.PlayerMissile;
 import com.williewheeler.robotron.model.event.GameEvent;
 import com.williewheeler.robotron.util.MathUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ListIterator;
 
 import static com.williewheeler.robotron.GameConfig.COLLISION_DISTANCE;
+import static com.williewheeler.robotron.GameConfig.HULK_KNOCKBACK_DISTANCE;
 
 /**
  * Created by willie on 5/15/17.
  */
 public class CollisionDetector {
+	private static final Logger log = LoggerFactory.getLogger(CollisionDetector.class);
+
 	private GameModel gameModel;
 
 	public CollisionDetector(GameModel gameModel) {
@@ -109,6 +115,49 @@ public class CollisionDetector {
 					}
 				} else if (gruntState == EntityState.GONE) {
 					gruntIt.remove();
+				}
+			}
+
+			List<Hulk> hulks = gameModel.getHulks();
+			ListIterator<Hulk> hulkIt = hulks.listIterator();
+			while (hulkIt.hasNext()) {
+				Hulk hulk = hulkIt.next();
+				int dist = MathUtil.distance(missileX, missileY, hulk.getX(), hulk.getY());
+				if (dist < COLLISION_DISTANCE) {
+					Direction playerMissileDirection = playerMissile.getDirection();
+					log.trace("playerMissileDirection={}", playerMissileDirection);
+					switch (playerMissileDirection) {
+						case UP:
+							hulk.incrY(-HULK_KNOCKBACK_DISTANCE);
+							break;
+						case DOWN:
+							hulk.incrY(HULK_KNOCKBACK_DISTANCE);
+							break;
+						case LEFT:
+							hulk.incrX(-HULK_KNOCKBACK_DISTANCE);
+							break;
+						case RIGHT:
+							hulk.incrX(HULK_KNOCKBACK_DISTANCE);
+							break;
+						case UP_LEFT:
+							hulk.incrX(-HULK_KNOCKBACK_DISTANCE);
+							hulk.incrY(-HULK_KNOCKBACK_DISTANCE);
+							break;
+						case UP_RIGHT:
+							hulk.incrX(HULK_KNOCKBACK_DISTANCE);
+							hulk.incrY(-HULK_KNOCKBACK_DISTANCE);
+							break;
+						case DOWN_LEFT:
+							hulk.incrX(-HULK_KNOCKBACK_DISTANCE);
+							hulk.incrY(HULK_KNOCKBACK_DISTANCE);
+							break;
+						case DOWN_RIGHT:
+							hulk.incrX(HULK_KNOCKBACK_DISTANCE);
+							hulk.incrY(HULK_KNOCKBACK_DISTANCE);
+							break;
+					}
+					playerMissileIt.remove();
+					continue processMissiles;
 				}
 			}
 

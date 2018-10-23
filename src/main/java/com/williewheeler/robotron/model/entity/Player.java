@@ -146,6 +146,7 @@ public class Player extends AbstractEntity {
 			int deltaX = 0;
 			int deltaY = 0;
 
+			// TODO Clean up all this if/else logic. Better to use bit ops.
 			if (fireUpIntent) {
 				deltaY -= PLAYER_FIRE_DISTANCE;
 			}
